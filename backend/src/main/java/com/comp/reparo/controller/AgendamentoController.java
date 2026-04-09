@@ -1,8 +1,12 @@
 package com.comp.reparo.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.comp.reparo.model.Agendamento;
+import com.comp.reparo.model.Cliente;
 import com.comp.reparo.repository.AgendamentoRepository;
 
 import java.util.List;
@@ -11,19 +15,39 @@ import java.util.List;
 @RequestMapping("/agendamentos")
 public class AgendamentoController {
 
-    private final AgendamentoRepository repository;
+    @Autowired
+    private AgendamentoRepository repository;
 
-    public AgendamentoController(AgendamentoRepository repository) {
-        this.repository = repository;
-    }
-
-    @GetMapping
+    @GetMapping(value = "/", produces = "application/json")
     public List<Agendamento> findAll() {
         return repository.findAll();
     }
 
-    @PostMapping
-    public Agendamento create(@RequestBody Agendamento a) {
-        return repository.save(a);
+    @GetMapping(value = "/{id}", produces = "application/json")
+    public ResponseEntity<Agendamento> findById(@PathVariable Long id) {
+        Agendamento agendamento = repository.findById(id).orElseThrow();
+
+        return new ResponseEntity<Agendamento>(agendamento, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/", produces = "application/json")
+    public ResponseEntity<Agendamento> create(@RequestBody Agendamento agendamento) {
+        Agendamento created = repository.save(agendamento);
+
+        return new ResponseEntity<Agendamento>(created, HttpStatus.OK);
+    }
+
+    @PutMapping(value = "/", produces = "application/json")
+    public ResponseEntity<Agendamento> update(@RequestBody Agendamento agendamento) {
+        Agendamento created = repository.save(agendamento);
+
+        return new ResponseEntity<Agendamento>(created, HttpStatus.OK);
+    }
+
+    @DeleteMapping(value = "/{id}", produces = "application/text")
+    public String deletar(@PathVariable("id") Long id) {
+        repository.deleteById(id);
+
+        return "ok";
     }
 }

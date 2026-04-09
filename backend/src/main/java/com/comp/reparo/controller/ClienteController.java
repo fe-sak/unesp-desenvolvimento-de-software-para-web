@@ -1,5 +1,8 @@
 package com.comp.reparo.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.comp.reparo.model.Cliente;
@@ -11,35 +14,36 @@ import java.util.List;
 @RequestMapping("/clientes")
 public class ClienteController {
 
-    private final ClienteRepository repository;
+    @Autowired
+    private ClienteRepository repository;
 
-    public ClienteController(ClienteRepository repository) {
-        this.repository = repository;
+    @GetMapping(value = "/", produces = "application/json")
+    public ResponseEntity<List<Cliente>> findAll() {
+        List<Cliente> list = repository.findAll();
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
-    @GetMapping
-    public List<Cliente> findAll() {
-        return repository.findAll();
+    @GetMapping(value = "/{id}", produces = "application/json")
+    public ResponseEntity<Cliente> findById(@PathVariable Long id) {
+        Cliente cliente = repository.findById(id).orElseThrow();
+        return new ResponseEntity<>(cliente, HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
-    public Cliente findById(@PathVariable Long id) {
-        return repository.findById(id).orElseThrow();
+    @PostMapping(value = "/", produces = "application/json")
+    public ResponseEntity<Cliente> create(@RequestBody Cliente cliente) {
+        Cliente created = repository.save(cliente);
+        return new ResponseEntity<>(created, HttpStatus.OK);
     }
 
-    @PostMapping
-    public Cliente create(@RequestBody Cliente cliente) {
-        return repository.save(cliente);
+    @PutMapping(value = "/", produces = "application/json")
+    public ResponseEntity<Cliente> update(@RequestBody Cliente cliente) {
+        Cliente updated = repository.save(cliente);
+        return new ResponseEntity<>(updated, HttpStatus.OK);
     }
 
-    @PutMapping("/{id}")
-    public Cliente update(@PathVariable Long id, @RequestBody Cliente cliente) {
-        cliente.setId(id);
-        return repository.save(cliente);
-    }
-
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
+    @DeleteMapping(value = "/{id}", produces = "application/text")
+    public String delete(@PathVariable("id") Long id) {
         repository.deleteById(id);
+        return "ok";
     }
 }
