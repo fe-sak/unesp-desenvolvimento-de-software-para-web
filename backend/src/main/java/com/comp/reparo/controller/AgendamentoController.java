@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.comp.reparo.model.Agendamento;
-import com.comp.reparo.model.Cliente;
 import com.comp.reparo.repository.AgendamentoRepository;
 
 import java.util.List;
