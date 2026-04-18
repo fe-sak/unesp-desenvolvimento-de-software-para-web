@@ -1,28 +1,31 @@
-# Getting Started
+# Guia do Backend
 
-### Reference Documentation
-For further reference, please consider the following sections:
+## Docker
 
-* [Official Gradle documentation](https://docs.gradle.org)
-* [Spring Boot Gradle Plugin Reference Guide](https://docs.spring.io/spring-boot/4.0.5/gradle-plugin)
-* [Create an OCI image](https://docs.spring.io/spring-boot/4.0.5/gradle-plugin/packaging-oci-image.html)
-* [Spring Web](https://docs.spring.io/spring-boot/4.0.5/reference/web/servlet.html)
-* [Spring Data JPA](https://docs.spring.io/spring-boot/4.0.5/reference/data/sql.html#data.sql.jpa-and-spring-data)
-* [Rest Repositories](https://docs.spring.io/spring-boot/4.0.5/how-to/data-access.html#howto.data-access.exposing-spring-data-repositories-as-rest)
+O fluxo com Docker Compose fica na raiz do repositório e sobe o backend junto
+com o Postgres.
 
-### Guides
-The following guides illustrate how to use some features concretely:
+Antes de usar, crie um arquivo `.env` na raiz do repositório a partir de
+`.env.example` e defina um `APP_JWT_SECRET` real.
 
-* [Building a RESTful Web Service](https://spring.io/guides/gs/rest-service/)
-* [Serving Web Content with Spring MVC](https://spring.io/guides/gs/serving-web-content/)
-* [Building REST services with Spring](https://spring.io/guides/tutorials/rest/)
-* [Accessing Data with JPA](https://spring.io/guides/gs/accessing-data-jpa/)
-* [Accessing JPA Data with REST](https://spring.io/guides/gs/accessing-data-rest/)
-* [Accessing Neo4j Data with REST](https://spring.io/guides/gs/accessing-neo4j-data-rest/)
-* [Accessing MongoDB Data with REST](https://spring.io/guides/gs/accessing-mongodb-data-rest/)
+Fluxo empacotado, a partir da raiz do repositório:
 
-### Additional Links
-These additional references should also help you:
+```bash
+cp .env.example .env
+docker compose up --build
+```
 
-* [Gradle Build Scans – insights for your project's build](https://scans.gradle.com#gradle)
+Fluxo de desenvolvimento, com o código do backend montado no contêiner:
 
+```bash
+cp .env.example .env
+docker compose -f compose.yaml -f compose.dev.yaml up --build
+```
+
+O override de desenvolvimento executa `./gradlew bootRun --continuous` dentro
+do contêiner e mantém o cache do Gradle em um volume nomeado do Docker.
+
+## Testes
+
+`./gradlew test` usa um banco H2 em memória configurado em
+`src/test/resources/application.properties`.
