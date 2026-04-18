@@ -1,4 +1,23 @@
-UML
+## Início Rápido com Docker
+
+Copie `.env.example` para `.env` na raiz do repositório e defina um
+`APP_JWT_SECRET` real.
+
+Para subir a aplicação empacotada com Postgres:
+
+```bash
+cp .env.example .env
+docker compose up --build
+```
+
+Para subir o fluxo de desenvolvimento com o backend montado no contêiner:
+
+```bash
+cp .env.example .env
+docker compose -f compose.yaml -f compose.dev.yaml up --build
+```
+
+## UML
 ```
 @startuml
 skinparam classAttributeIconSize 0
