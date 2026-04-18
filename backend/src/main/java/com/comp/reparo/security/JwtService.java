@@ -3,14 +3,14 @@ package com.comp.reparo.security;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Date;
+import java.util.Optional;
 
 import javax.crypto.SecretKey;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import com.comp.reparo.model.User;
-
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 
@@ -20,34 +20,38 @@ public class JwtService {
     private final SecretKey secretKey;
     private final long expirationMillis;
 
-    public JwtService(
-            @Value("${app.jwt.secret}") String secret,
-            @Value("${app.jwt.expiration-ms:86400000}") long expirationMillis) {
-        this.secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
-        this.expirationMillis = expirationMillis;
+    public JwtService(JwtProperties jwtProperties) {
+        this.secretKey = Keys.hmacShaKeyFor(jwtProperties.secret().getBytes(StandardCharsets.UTF_8));
+        this.expirationMillis = jwtProperties.expirationMs();
     }
 
-    public String generateToken(User user) {
+    public String generateToken(UserDetails userDetails) {
         Instant now = Instant.now();
 
         return Jwts.builder()
-                .subject(user.getUsername())
+                .subject(userDetails.getUsername())
                 .issuedAt(Date.from(now))
                 .expiration(Date.from(now.plusMillis(expirationMillis)))
                 .signWith(secretKey)
                 .compact();
     }
 
-    public String extractUsername(String token) {
-        return Jwts.parser()
-                .verifyWith(secretKey)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload()
-                .getSubject();
+    public Optional<String> extractUsername(String token) {
+        try {
+            return Optional.ofNullable(Jwts.parser()
+                    .verifyWith(secretKey)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload()
+                    .getSubject());
+        } catch (JwtException | IllegalArgumentException exception) {
+            return Optional.empty();
+        }
     }
 
-    public boolean isTokenValid(String token, String username) {
-        return extractUsername(token).equals(username);
+    public boolean isTokenValid(String token, UserDetails userDetails) {
+        return extractUsername(token)
+                .map(userDetails.getUsername()::equals)
+                .orElse(false);
     }
 }
