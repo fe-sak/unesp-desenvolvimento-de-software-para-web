@@ -1,0 +1,14 @@
+services:
+  app:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: dev
+    working_dir: /workspace/backend
+    command: ["./gradlew", "bootRun", "--continuous"]
+    volumes:
+      - ./backend:/workspace/backend
+      - gradle-cache:/root/.gradle
+
+volumes:
+  gradle-cache:

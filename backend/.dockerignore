@@ -1,0 +1,13 @@
+.gradle
+build
+bin
+.git
+.gitignore
+.idea
+.vscode
+*.iml
+*.log
+compose.yaml
+compose.dev.yaml
+.env
+.env.*
