@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import com.comp.reparo.dto.AuthResponse;
 import com.comp.reparo.dto.LoginRequest;
 import com.comp.reparo.dto.RegisterRequest;
-import com.comp.reparo.service.AuthService;
+import com.comp.reparo.service.AuthenticationService;
 
 import jakarta.validation.Valid;
 
@@ -15,19 +15,19 @@ import jakarta.validation.Valid;
 @RequestMapping("/auth")
 public class AuthController {
 
-    private final AuthService authService;
+    private final AuthenticationService authenticationService;
 
-    public AuthController(AuthService authService) {
-        this.authService = authService;
+    public AuthController(AuthenticationService authenticationService) {
+        this.authenticationService = authenticationService;
     }
 
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(authService.register(request));
+        return ResponseEntity.status(HttpStatus.CREATED).body(authenticationService.register(request));
     }
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
-        return ResponseEntity.ok(authService.login(request));
+        return ResponseEntity.ok(authenticationService.login(request));
     }
 }
