@@ -44,6 +44,7 @@ public class SecurityConfiguration {
                         .accessDeniedHandler(restAccessDeniedHandler))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/actuator/health", "/actuator/health/**").permitAll()
                         .requestMatchers("/tecnicos/**").hasRole("ADMIN")
                         .requestMatchers("/clientes/**").hasRole("ADMIN")
                         .requestMatchers("/agendamentos/**").hasAnyRole("USER", "ADMIN")
