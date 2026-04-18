@@ -1,28 +1,31 @@
 package com.comp.reparo.service;
 
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.comp.reparo.dto.AuthResponse;
 import com.comp.reparo.dto.LoginRequest;
 import com.comp.reparo.dto.RegisterRequest;
+import com.comp.reparo.exception.UsernameAlreadyExistsException;
 import com.comp.reparo.model.User;
 import com.comp.reparo.model.UserRole;
 import com.comp.reparo.repository.UserRepository;
 import com.comp.reparo.security.JwtService;
 
 @Service
-public class AuthService {
+public class AuthenticationService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
 
-    public AuthService(
+    public AuthenticationService(
             UserRepository userRepository,
             PasswordEncoder passwordEncoder,
             AuthenticationManager authenticationManager,
@@ -33,9 +36,10 @@ public class AuthService {
         this.jwtService = jwtService;
     }
 
+    @Transactional
     public AuthResponse register(RegisterRequest request) {
         if (userRepository.existsByUsername(request.username())) {
-            throw new IllegalArgumentException("Username already exists");
+            throw new UsernameAlreadyExistsException(request.username());
         }
 
         User user = new User();
@@ -54,10 +58,14 @@ public class AuthService {
     }
 
     public AuthResponse login(LoginRequest request) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.username(),
-                        request.password()));
+        Authentication authentication;
+
+        try {
+            authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.username(), request.password()));
+        } catch (BadCredentialsException exception) {
+            throw new BadCredentialsException("Invalid username or password", exception);
+        }
 
         User user = (User) authentication.getPrincipal();
         String token = jwtService.generateToken(user);
