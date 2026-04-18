@@ -7,14 +7,22 @@ Para subir a aplicação empacotada com Postgres:
 
 ```bash
 cp .env.example .env
-docker compose up --build
+make up
 ```
 
 Para subir o fluxo de desenvolvimento com o backend montado no contêiner:
 
 ```bash
 cp .env.example .env
-docker compose -f compose.yaml -f compose.dev.yaml up --build
+make dev
+```
+
+Para executar os fluxos locais mais comuns:
+
+```bash
+make test
+make build
+make image
 ```
 
 ## UML
