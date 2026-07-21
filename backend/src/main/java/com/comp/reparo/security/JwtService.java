@@ -28,8 +28,14 @@ public class JwtService {
     public String generateToken(UserDetails userDetails) {
         Instant now = Instant.now();
 
+        String role = userDetails.getAuthorities().stream()
+                .findFirst()
+                .map(a -> a.getAuthority())
+                .orElse("ROLE_USER");
+
         return Jwts.builder()
                 .subject(userDetails.getUsername())
+                .claim("role", role)
                 .issuedAt(Date.from(now))
                 .expiration(Date.from(now.plusMillis(expirationMillis)))
                 .signWith(secretKey)
