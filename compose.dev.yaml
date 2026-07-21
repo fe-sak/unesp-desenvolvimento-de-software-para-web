@@ -9,6 +9,8 @@ services:
     volumes:
       - ./backend:/workspace/backend
       - gradle-cache:/root/.gradle
+      - gradle-project:/workspace/backend/.gradle
 
 volumes:
   gradle-cache:
+  gradle-project:
