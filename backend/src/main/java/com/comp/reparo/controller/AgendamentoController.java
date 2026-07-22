@@ -3,9 +3,11 @@ package com.comp.reparo.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import com.comp.reparo.model.Agendamento;
+import com.comp.reparo.model.User;
 import com.comp.reparo.repository.AgendamentoRepository;
 
 import java.util.List;
@@ -17,8 +19,16 @@ public class AgendamentoController {
     @Autowired
     private AgendamentoRepository repository;
 
+    private User getCurrentUser() {
+        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
+
     @GetMapping(value = "/", produces = "application/json")
     public List<Agendamento> findAll() {
+        User user = getCurrentUser();
+        if (!user.isAdmin() && user.getCliente() != null) {
+            return repository.findByClienteId(user.getCliente().getId());
+        }
         return repository.findAll();
     }
 

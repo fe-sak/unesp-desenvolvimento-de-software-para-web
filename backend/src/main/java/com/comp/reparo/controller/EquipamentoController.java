@@ -5,9 +5,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import com.comp.reparo.model.Equipamento;
+import com.comp.reparo.model.User;
 import com.comp.reparo.repository.EquipamentoRepository;
 
 @RestController
@@ -17,9 +19,19 @@ public class EquipamentoController {
     @Autowired
     private EquipamentoRepository repository;
 
+    private User getCurrentUser() {
+        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
+
     @GetMapping(value = "/", produces = "application/json")
     public ResponseEntity<List<Equipamento>> findAll() {
-        List<Equipamento> list = repository.findAll();
+        User user = getCurrentUser();
+        List<Equipamento> list;
+        if (!user.isAdmin() && user.getCliente() != null) {
+            list = repository.findByClienteId(user.getCliente().getId());
+        } else {
+            list = repository.findAll();
+        }
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
