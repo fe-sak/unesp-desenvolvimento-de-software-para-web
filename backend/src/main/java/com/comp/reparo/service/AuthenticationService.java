@@ -12,8 +12,10 @@ import com.comp.reparo.dto.AuthResponse;
 import com.comp.reparo.dto.LoginRequest;
 import com.comp.reparo.dto.RegisterRequest;
 import com.comp.reparo.exception.UsernameAlreadyExistsException;
+import com.comp.reparo.model.Cliente;
 import com.comp.reparo.model.User;
 import com.comp.reparo.model.UserRole;
+import com.comp.reparo.repository.ClienteRepository;
 import com.comp.reparo.repository.UserRepository;
 import com.comp.reparo.security.JwtService;
 
@@ -21,16 +23,19 @@ import com.comp.reparo.security.JwtService;
 public class AuthenticationService {
 
     private final UserRepository userRepository;
+    private final ClienteRepository clienteRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
 
     public AuthenticationService(
             UserRepository userRepository,
+            ClienteRepository clienteRepository,
             PasswordEncoder passwordEncoder,
             AuthenticationManager authenticationManager,
             JwtService jwtService) {
         this.userRepository = userRepository;
+        this.clienteRepository = clienteRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
@@ -45,7 +50,12 @@ public class AuthenticationService {
         User user = new User();
         user.setUsername(request.username());
         user.setPassword(passwordEncoder.encode(request.password()));
-        user.setRole(UserRole.USER);
+        user.setRole(request.admin() ? UserRole.ADMIN : UserRole.USER);
+
+        if (!request.admin() && request.clienteId() != null) {
+            Cliente cliente = clienteRepository.findById(request.clienteId()).orElse(null);
+            user.setCliente(cliente);
+        }
 
         if (request.name() != null && !request.name().isBlank()) {
             user.setName(request.name());

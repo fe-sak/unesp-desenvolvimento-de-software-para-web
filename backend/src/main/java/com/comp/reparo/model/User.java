@@ -29,6 +29,10 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private UserRole role;
 
+    @ManyToOne
+    @JoinColumn(name = "cliente_id")
+    private Cliente cliente;
+
     public User() {
     }
 
@@ -73,5 +77,17 @@ public class User implements UserDetails {
 
     public void setRole(UserRole role2) {
         this.role = role2;
+    }
+
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+
+    public boolean isAdmin() {
+        return this.role == UserRole.ADMIN;
     }
 }
