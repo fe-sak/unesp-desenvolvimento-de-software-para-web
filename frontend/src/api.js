@@ -16,8 +16,8 @@ api.interceptors.request.use((config) => {
 export const login = (username, password) =>
   api.post('/auth/login', { username, password }).then(r => r.data)
 
-export const register = (username, password, name) =>
-  api.post('/auth/register', { username, password, name }).then(r => r.data)
+export const register = (username, password, name, admin, clienteId) =>
+  api.post('/auth/register', { username, password, name, admin, clienteId }).then(r => r.data)
 
 // clientes
 export const getClientes = () => api.get('/clientes/').then(r => r.data)

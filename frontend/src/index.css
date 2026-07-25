@@ -31,6 +31,13 @@ input, select, textarea {
   width: 100%;
 }
 
+input::placeholder,
+textarea::placeholder {
+  color: #bbb;
+  font-style: italic;
+  font-size: 13px;
+}
+
 textarea {
   resize: vertical;
 }

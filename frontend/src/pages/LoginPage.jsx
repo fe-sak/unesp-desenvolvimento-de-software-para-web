@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { login } from '../api'
 
@@ -33,18 +33,18 @@ function LoginPage({ onLogin }) {
 
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label>Usuario</label>
+            <label className="required">Usuário</label>
             <input
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
-              placeholder="seu usuario"
+              placeholder="seu usuário"
             />
           </div>
 
           <div className="form-group">
-            <label>Senha</label>
+            <label className="required">Senha</label>
             <input
               type="password"
               value={password}
@@ -61,7 +61,7 @@ function LoginPage({ onLogin }) {
 
         <br />
         <p>
-          Nao tem conta? <Link to="/register">Cadastre-se</Link>
+          Não tem conta? <Link to="/register">Cadastre-se</Link>
         </p>
       </div>
     </div>

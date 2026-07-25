@@ -18,6 +18,11 @@ function App() {
     if (token) {
       try {
         const payload = JSON.parse(atob(token.split('.')[1]))
+        console.log('token payload (init):', payload)
+        if (!payload.role) {
+          localStorage.removeItem('token')
+          return
+        }
         setUser({ username: payload.sub, role: payload.role })
       } catch (e) {
         console.log('token invalido')
@@ -29,6 +34,7 @@ function App() {
   const onLogin = (token) => {
     localStorage.setItem('token', token)
     const payload = JSON.parse(atob(token.split('.')[1]))
+    console.log('token payload:', payload)
     setUser({ username: payload.sub, role: payload.role })
   }
 

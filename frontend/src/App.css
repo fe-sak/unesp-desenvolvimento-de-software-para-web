@@ -53,6 +53,13 @@
   background-color: #e74c3c;
 }
 
+.admin-icon {
+  color: #f1c40f;
+  margin-right: 4px;
+  vertical-align: middle;
+  margin-top: -2px;
+}
+
 /* container */
 .container {
   max-width: 1100px;
@@ -193,11 +200,11 @@
 }
 
 .table tr:nth-child(even) {
-  background-color: #f9f9f9;
+  background-color: #f5f7fa;
 }
 
-.table tr:hover {
-  background-color: #f0f0f0;
+.table tbody tr:hover {
+  background-color: #e8f0fe;
 }
 
 /* alerts */
@@ -209,6 +216,92 @@
   border-radius: 4px;
   margin-bottom: 12px;
   font-size: 14px;
+}
+
+.alert-success {
+  background-color: #eafaf1;
+  color: #27ae60;
+  padding: 10px;
+  border: 1px solid #27ae60;
+  border-radius: 4px;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+/* status badges */
+.status-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.status-PENDENTE {
+  background-color: #fef9e7;
+  color: #b7950b;
+}
+
+.status-CONFIRMADO {
+  background-color: #eaf2f8;
+  color: #2980b9;
+}
+
+.status-CANCELADO {
+  background-color: #fdedec;
+  color: #c0392b;
+}
+
+.status-CONCLUIDO {
+  background-color: #eafaf1;
+  color: #27ae60;
+}
+
+/* spinner */
+.spinner {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  border: 3px solid #ddd;
+  border-top-color: #2980b9;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-box {
+  text-align: center;
+  padding: 20px;
+  color: #999;
+  font-size: 14px;
+}
+
+.loading-box .spinner {
+  margin-bottom: 8px;
+}
+
+/* required */
+label.required::after {
+  content: " *";
+  color: #c0392b;
+  font-weight: bold;
+}
+
+/* home counts */
+.home-card .home-count {
+  font-size: 28px;
+  font-weight: bold;
+  color: #2980b9;
+  margin: 5px 0;
+}
+
+.col-acoes {
+  width: 130px;
+  text-align: center;
+  white-space: nowrap;
 }
 
 /* home page */
@@ -245,4 +338,108 @@
 .home-card p {
   font-size: 13px;
   color: #666;
+}
+
+/* wizard */
+.wizard-card {
+  background: #fafafa;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  margin-bottom: 15px;
+}
+
+.wizard-steps {
+  display: flex;
+  border-bottom: 1px solid #ddd;
+  background: #f5f5f5;
+  border-radius: 6px 6px 0 0;
+}
+
+.wizard-step {
+  flex: 1;
+  text-align: center;
+  padding: 10px;
+  font-size: 13px;
+  color: #999;
+  border-right: 1px solid #ddd;
+}
+
+.wizard-step:last-child {
+  border-right: none;
+}
+
+.wizard-step .wizard-num {
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  line-height: 22px;
+  border-radius: 50%;
+  background: #ddd;
+  color: #999;
+  font-size: 12px;
+  margin-right: 5px;
+  font-weight: bold;
+}
+
+.wizard-step.active {
+  color: #2c3e50;
+  background: #fff;
+}
+
+.wizard-step.active .wizard-num {
+  background: #2980b9;
+  color: white;
+}
+
+.wizard-step.done {
+  color: #27ae60;
+}
+
+.wizard-step.done .wizard-num {
+  background: #27ae60;
+  color: white;
+}
+
+.wizard-body {
+  padding: 20px;
+}
+
+.wizard-botoes {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  padding: 15px 20px;
+  border-top: 1px solid #ddd;
+}
+
+.wizard-inline-form {
+  background: #fff;
+  border: 1px solid #bdc3c7;
+  padding: 15px;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
+.wizard-inline-form h4 {
+  margin-bottom: 8px;
+  color: #2c3e50;
+  font-size: 14px;
+}
+
+.wizard-review {
+  background: #fff;
+  border: 1px solid #bdc3c7;
+  padding: 15px;
+  border-radius: 4px;
+  margin-top: 15px;
+}
+
+.wizard-review h4 {
+  margin-bottom: 8px;
+  color: #2c3e50;
+}
+
+.wizard-review p {
+  font-size: 14px;
+  margin-bottom: 4px;
 }

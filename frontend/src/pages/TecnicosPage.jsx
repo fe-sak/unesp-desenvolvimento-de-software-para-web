@@ -5,7 +5,16 @@ function TecnicosPage() {
   const [tecnicos, setTecnicos] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [sucesso, setSucesso] = useState('')
 
+  useEffect(() => {
+    if (sucesso) {
+      const t = setTimeout(() => setSucesso(''), 3000)
+      return () => clearTimeout(t)
+    }
+  }, [sucesso])
+
+  // form
   const [showForm, setShowForm] = useState(false)
   const [editando, setEditando] = useState(null)
   const [nome, setNome] = useState('')
@@ -18,7 +27,7 @@ function TecnicosPage() {
       setTecnicos(res)
     } catch (e) {
       console.log(e)
-      setError('Erro ao carregar tecnicos')
+      setError('Erro ao carregar técnicos')
     } finally {
       setLoading(false)
     }
@@ -67,9 +76,10 @@ function TecnicosPage() {
       }
       fecharForm()
       carregar()
+      setSucesso(editando ? 'Técnico atualizado!' : 'Técnico criado!')
     } catch (err) {
       console.log(err)
-      setError(err.response?.data?.error || 'Erro ao salvar tecnico')
+      setError(err.response?.data?.error || 'Erro ao salvar técnico')
     }
   }
 
@@ -78,33 +88,35 @@ function TecnicosPage() {
     try {
       await deleteTecnico(id)
       carregar()
+      setSucesso('Técnico excluído!')
     } catch (err) {
-      alert('Erro ao excluir tecnico')
+      alert('Erro ao excluir técnico')
     }
   }
 
   return (
     <div className="page">
       <div className="page-header">
-        <h2>Tecnicos</h2>
-        <button className="btn btn-primary" onClick={abrirNovo}>Novo Tecnico</button>
+        <h2>Técnicos</h2>
+        <button className="btn btn-primary" onClick={abrirNovo}>Novo Técnico</button>
       </div>
 
       {error && <div className="alert-error">{error}</div>}
+      {sucesso && <div className="alert-success">{sucesso}</div>}
 
       {showForm && (
         <div className="form-card">
-          <h3>{editando ? 'Editar Tecnico' : 'Novo Tecnico'}</h3>
+          <h3>{editando ? 'Editar Técnico' : 'Novo Técnico'}</h3>
           <br />
           <form onSubmit={salvar}>
             <div className="form-group">
-              <label>Nome</label>
+              <label className="required">Nome</label>
               <input
                 type="text"
                 value={nome}
                 onChange={(e) => setNome(e.target.value)}
                 required
-                placeholder="Nome do tecnico"
+                placeholder="Nome do técnico"
               />
             </div>
             <div className="form-group">
@@ -113,7 +125,7 @@ function TecnicosPage() {
                 type="text"
                 value={especialidade}
                 onChange={(e) => setEspecialidade(e.target.value)}
-                placeholder="Ex: eletronica, refrigeracao"
+                placeholder="Ex: eletrônica, refrigeração"
               />
             </div>
             <div style={{ display: 'flex', gap: '8px' }}>
@@ -127,7 +139,7 @@ function TecnicosPage() {
       <br />
 
       {loading ? (
-        <p>Carregando...</p>
+        <div className="loading-box"><div className="spinner"></div>Carregando...</div>
       ) : (
         <table className="table">
           <thead>
@@ -135,13 +147,13 @@ function TecnicosPage() {
               <th>ID</th>
               <th>Nome</th>
               <th>Especialidade</th>
-              <th>Acoes</th>
+              <th className="col-acoes">Acoes</th>
             </tr>
           </thead>
           <tbody>
             {tecnicos.length === 0 && (
               <tr>
-                <td colSpan={4}>Nenhum tecnico cadastrado</td>
+                <td colSpan={4}>Nenhum técnico cadastrado</td>
               </tr>
             )}
             {tecnicos.map((tecnico) => (

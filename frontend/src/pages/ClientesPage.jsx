@@ -5,7 +5,16 @@ function ClientesPage({ isAdmin }) {
   const [clientes, setClientes] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [sucesso, setSucesso] = useState('')
 
+  useEffect(() => {
+    if (sucesso) {
+      const t = setTimeout(() => setSucesso(''), 3000)
+      return () => clearTimeout(t)
+    }
+  }, [sucesso])
+
+  // form state
   const [showForm, setShowForm] = useState(false)
   const [editando, setEditando] = useState(null)
   const [nome, setNome] = useState('')
@@ -71,6 +80,7 @@ function ClientesPage({ isAdmin }) {
       }
       fecharForm()
       carregar()
+      setSucesso(editando ? 'Cliente atualizado!' : 'Cliente criado!')
     } catch (err) {
       console.log(err)
       setError(err.response?.data?.error || 'Erro ao salvar cliente')
@@ -82,6 +92,7 @@ function ClientesPage({ isAdmin }) {
     try {
       await deleteCliente(id)
       carregar()
+      setSucesso('Cliente excluído!')
     } catch (err) {
       console.log(err)
       alert('Erro ao excluir cliente')
@@ -100,6 +111,7 @@ function ClientesPage({ isAdmin }) {
       </div>
 
       {error && <div className="alert-error">{error}</div>}
+      {sucesso && <div className="alert-success">{sucesso}</div>}
 
       {showForm && (
         <div className="form-card">
@@ -145,7 +157,7 @@ function ClientesPage({ isAdmin }) {
       <br />
 
       {loading ? (
-        <p>Carregando...</p>
+        <div className="loading-box"><div className="spinner"></div>Carregando...</div>
       ) : (
         <table className="table">
           <thead>
@@ -154,13 +166,14 @@ function ClientesPage({ isAdmin }) {
               <th>Nome</th>
               <th>Telefone</th>
               <th>Email</th>
-              <th>Acoes</th>
+              <th>Usuario</th>
+              <th className="col-acoes">Acoes</th>
             </tr>
           </thead>
           <tbody>
             {clientes.length === 0 && (
               <tr>
-                <td colSpan={5}>Nenhum cliente cadastrado</td>
+                <td colSpan={6}>Nenhum cliente cadastrado</td>
               </tr>
             )}
             {clientes.map((cliente) => (
@@ -169,6 +182,7 @@ function ClientesPage({ isAdmin }) {
                 <td>{cliente.nome}</td>
                 <td>{cliente.telefone || '-'}</td>
                 <td>{cliente.email || '-'}</td>
+                <td>{cliente.hasUsuario ? 'Sim' : 'Não'}</td>
                 <td>
                   <button className="btn btn-small" onClick={() => abrirEdicao(cliente)}>Editar</button>
                   <button className="btn btn-small btn-danger" onClick={() => excluir(cliente.id)}>Excluir</button>

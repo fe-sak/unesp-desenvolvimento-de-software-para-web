@@ -6,7 +6,16 @@ function EquipamentosPage() {
   const [clientes, setClientes] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [sucesso, setSucesso] = useState('')
 
+  useEffect(() => {
+    if (sucesso) {
+      const t = setTimeout(() => setSucesso(''), 3000)
+      return () => clearTimeout(t)
+    }
+  }, [sucesso])
+
+  // form
   const [showForm, setShowForm] = useState(false)
   const [editando, setEditando] = useState(null)
   const [tipo, setTipo] = useState('')
@@ -81,6 +90,7 @@ function EquipamentosPage() {
       }
       fecharForm()
       carregar()
+      setSucesso(editando ? 'Equipamento atualizado!' : 'Equipamento criado!')
     } catch (err) {
       console.log(err)
       setError(err.response?.data?.error || 'Erro ao salvar equipamento')
@@ -92,14 +102,18 @@ function EquipamentosPage() {
     try {
       await deleteEquipamento(id)
       carregar()
+      setSucesso('Equipamento excluído!')
     } catch (err) {
       alert('Erro ao excluir equipamento')
     }
   }
 
+  // helper pra pegar nome do cliente
   const nomeCliente = (cliente) => {
     if (!cliente) return '-'
+    // se veio com cliente populado
     if (typeof cliente === 'object') return cliente.nome
+    // se veio so o id, procura na lista
     const c = clientes.find((x) => x.id === cliente)
     return c ? c.nome : `ID: ${cliente}`
   }
@@ -112,6 +126,7 @@ function EquipamentosPage() {
       </div>
 
       {error && <div className="alert-error">{error}</div>}
+      {sucesso && <div className="alert-success">{sucesso}</div>}
 
       {showForm && (
         <div className="form-card">
@@ -119,7 +134,7 @@ function EquipamentosPage() {
           <br />
           <form onSubmit={salvar}>
             <div className="form-group">
-              <label>Tipo</label>
+              <label className="required">Tipo</label>
               <input
                 type="text"
                 value={tipo}
@@ -175,7 +190,7 @@ function EquipamentosPage() {
       <br />
 
       {loading ? (
-        <p>Carregando...</p>
+        <div className="loading-box"><div className="spinner"></div>Carregando...</div>
       ) : (
         <table className="table">
           <thead>
@@ -186,7 +201,7 @@ function EquipamentosPage() {
               <th>Modelo</th>
               <th>Defeito</th>
               <th>Cliente</th>
-              <th>Acoes</th>
+              <th className="col-acoes">Acoes</th>
             </tr>
           </thead>
           <tbody>
