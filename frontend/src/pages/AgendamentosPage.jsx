@@ -3,6 +3,7 @@ import {
   getAgendamentos, createAgendamento, updateAgendamento, deleteAgendamento,
   getClientes, createCliente, getTecnicos, createTecnico, getEquipamentos, createEquipamento
 } from '../api'
+import AgendamentosKanban from './AgendamentosKanban'
 
 function AgendamentosPage() {
   const [agendamentos, setAgendamentos] = useState([])
@@ -12,6 +13,7 @@ function AgendamentosPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [sucesso, setSucesso] = useState('')
+  const [modo, setModo] = useState('tabela')
 
   useEffect(() => {
     if (sucesso) {
@@ -472,7 +474,13 @@ function AgendamentosPage() {
     <div className="page">
       <div className="page-header">
         <h2>Agendamentos</h2>
-        <button className="btn btn-primary" onClick={abrirNovo}>Novo Agendamento</button>
+        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+          <div className="view-toggle">
+            <button className={modo === 'tabela' ? 'active' : ''} onClick={() => setModo('tabela')}>Tabela</button>
+            <button className={modo === 'kanban' ? 'active' : ''} onClick={() => setModo('kanban')}>Kanban</button>
+          </div>
+          <button className="btn btn-primary" onClick={abrirNovo}>Novo Agendamento</button>
+        </div>
       </div>
 
       {error && <div className="alert-error">{error}</div>}
@@ -517,6 +525,14 @@ function AgendamentosPage() {
 
       {loading ? (
         <div className="loading-box"><div className="spinner"></div>Carregando...</div>
+      ) : modo === 'kanban' ? (
+        <AgendamentosKanban
+          agendamentos={agendamentos}
+          clientes={clientes}
+          tecnicos={tecnicos}
+          equipamentos={equipamentos}
+          onUpdate={carregar}
+        />
       ) : (
         <table className="table">
           <thead>

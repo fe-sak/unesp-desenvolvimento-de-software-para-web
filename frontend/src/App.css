@@ -443,3 +443,103 @@ label.required::after {
   font-size: 14px;
   margin-bottom: 4px;
 }
+
+/* kanban */
+.kanban-board {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 4px 0 8px;
+  min-height: 300px;
+}
+
+.kanban-coluna {
+  flex: 1;
+  min-width: 220px;
+  background: #f0f2f5;
+  border-radius: 6px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.kanban-coluna h4 {
+  text-align: center;
+  margin-bottom: 8px;
+  font-size: 13px;
+  color: #555;
+  padding-bottom: 6px;
+  border-bottom: 2px solid #ddd;
+}
+
+.kanban-coluna .kanban-count {
+  background: #ddd;
+  border-radius: 10px;
+  padding: 1px 7px;
+  font-size: 11px;
+  margin-left: 4px;
+  color: #666;
+}
+
+.kanban-cards {
+  flex: 1;
+  min-height: 60px;
+}
+
+.kanban-card {
+  background: white;
+  padding: 8px 10px;
+  border-radius: 4px;
+  margin-bottom: 6px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  border-left: 3px solid #ddd;
+  font-size: 13px;
+}
+
+.kanban-card p {
+  margin: 2px 0;
+  font-size: 12px;
+  color: #444;
+}
+
+.kanban-card strong {
+  color: #2c3e50;
+}
+
+.kanban-card.pendente  { border-left-color: #f1c40f; }
+.kanban-card.confirmado { border-left-color: #2980b9; }
+.kanban-card.cancelado { border-left-color: #c0392b; }
+.kanban-card.concluido { border-left-color: #27ae60; }
+
+.kanban-coluna.pendente  h4 { border-bottom-color: #f1c40f; }
+.kanban-coluna.confirmado h4 { border-bottom-color: #2980b9; }
+.kanban-coluna.cancelado h4 { border-bottom-color: #c0392b; }
+.kanban-coluna.concluido h4 { border-bottom-color: #27ae60; }
+
+.kanban-card.dragging {
+  opacity: 0.5;
+}
+
+.kanban-coluna.drag-over {
+  background: #e8f0fe;
+}
+
+.view-toggle {
+  display: flex;
+  gap: 4px;
+}
+
+.view-toggle button {
+  padding: 4px 12px;
+  border: 1px solid #ccc;
+  background: #fafafa;
+  border-radius: 3px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.view-toggle button.active {
+  background: #2980b9;
+  color: white;
+  border-color: #2980b9;
+}
