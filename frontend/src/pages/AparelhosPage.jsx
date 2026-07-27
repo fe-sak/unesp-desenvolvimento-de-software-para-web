@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
-import { getEquipamentos, createEquipamento, updateEquipamento, deleteEquipamento, getClientes } from '../api'
+import { getAparelhos, createAparelho, updateAparelho, deleteAparelho, getClientes } from '../api'
 
-function EquipamentosPage() {
-  const [equipamentos, setEquipamentos] = useState([])
+function AparelhosPage() {
+  const [aparelhos, setAparelhos] = useState([])
   const [clientes, setClientes] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -27,8 +27,8 @@ function EquipamentosPage() {
   var carregar = async () => {
     setLoading(true)
     try {
-      const [equips, clis] = await Promise.all([getEquipamentos(), getClientes()])
-      setEquipamentos(equips)
+      const [equips, clis] = await Promise.all([getAparelhos(), getClientes()])
+      setAparelhos(equips)
       setClientes(clis)
     } catch (e) {
       console.log(e)
@@ -84,27 +84,27 @@ function EquipamentosPage() {
     try {
       if (editando) {
         dados.id = editando.id
-        await updateEquipamento(dados)
+        await updateAparelho(dados)
       } else {
-        await createEquipamento(dados)
+        await createAparelho(dados)
       }
       fecharForm()
       carregar()
-      setSucesso(editando ? 'Equipamento atualizado!' : 'Equipamento criado!')
+      setSucesso(editando ? 'Aparelho atualizado!' : 'Aparelho criado!')
     } catch (err) {
       console.log(err)
-      setError(err.response?.data?.error || 'Erro ao salvar equipamento')
+      setError(err.response?.data?.error || 'Erro ao salvar aparelho')
     }
   }
 
   const excluir = async (id) => {
     if (!window.confirm('Tem certeza?')) return
     try {
-      await deleteEquipamento(id)
+      await deleteAparelho(id)
       carregar()
-      setSucesso('Equipamento excluído!')
+      setSucesso('Aparelho excluído!')
     } catch (err) {
-      alert('Erro ao excluir equipamento')
+      alert('Erro ao excluir aparelho')
     }
   }
 
@@ -121,8 +121,8 @@ function EquipamentosPage() {
   return (
     <div className="page">
       <div className="page-header">
-        <h2>Equipamentos</h2>
-        <button className="btn btn-primary" onClick={abrirNovo}>Novo Equipamento</button>
+        <h2>Aparelhos</h2>
+        <button className="btn btn-primary" onClick={abrirNovo}>Novo Aparelho</button>
       </div>
 
       {error && <div className="alert-error">{error}</div>}
@@ -130,7 +130,7 @@ function EquipamentosPage() {
 
       {showForm && (
         <div className="form-card">
-          <h3>{editando ? 'Editar Equipamento' : 'Novo Equipamento'}</h3>
+          <h3>{editando ? 'Editar Aparelho' : 'Novo Aparelho'}</h3>
           <br />
           <form onSubmit={salvar}>
             <div className="form-group">
@@ -158,7 +158,7 @@ function EquipamentosPage() {
                 type="text"
                 value={modelo}
                 onChange={(e) => setModelo(e.target.value)}
-                placeholder="Modelo do equipamento"
+                placeholder="Modelo do aparelho"
               />
             </div>
             <div className="form-group">
@@ -205,12 +205,12 @@ function EquipamentosPage() {
             </tr>
           </thead>
           <tbody>
-            {equipamentos.length === 0 && (
+            {aparelhos.length === 0 && (
               <tr>
-                <td colSpan={7}>Nenhum equipamento cadastrado</td>
+                <td colSpan={7}>Nenhum aparelho cadastrado</td>
               </tr>
             )}
-            {equipamentos.map((equip) => (
+            {aparelhos.map((equip) => (
               <tr key={equip.id}>
                 <td>{equip.id}</td>
                 <td>{equip.tipo}</td>
@@ -231,4 +231,4 @@ function EquipamentosPage() {
   )
 }
 
-export default EquipamentosPage
+export default AparelhosPage

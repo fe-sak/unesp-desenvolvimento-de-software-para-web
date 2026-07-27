@@ -8,25 +8,25 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import com.comp.reparo.model.Equipamento;
+import com.comp.reparo.model.Aparelho;
 import com.comp.reparo.model.User;
-import com.comp.reparo.repository.EquipamentoRepository;
+import com.comp.reparo.repository.AparelhoRepository;
 
 @RestController
-@RequestMapping("/equipamentos")
-public class EquipamentoController {
+@RequestMapping("/aparelhos")
+public class AparelhoController {
 
     @Autowired
-    private EquipamentoRepository repository;
+    private AparelhoRepository repository;
 
     private User getCurrentUser() {
         return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
     @GetMapping(value = "/", produces = "application/json")
-    public ResponseEntity<List<Equipamento>> findAll() {
+    public ResponseEntity<List<Aparelho>> findAll() {
         User user = getCurrentUser();
-        List<Equipamento> list;
+        List<Aparelho> list;
         if (!user.isAdmin() && user.getCliente() != null) {
             list = repository.findByClienteId(user.getCliente().getId());
         } else {
@@ -36,20 +36,20 @@ public class EquipamentoController {
     }
 
     @GetMapping(value = "/{id}", produces = "application/json")
-    public ResponseEntity<Equipamento> findById(@PathVariable Long id) {
-        Equipamento equipamento = repository.findById(id).orElseThrow();
-        return new ResponseEntity<>(equipamento, HttpStatus.OK);
+    public ResponseEntity<Aparelho> findById(@PathVariable Long id) {
+        Aparelho aparelho = repository.findById(id).orElseThrow();
+        return new ResponseEntity<>(aparelho, HttpStatus.OK);
     }
 
     @PostMapping(value = "/", produces = "application/json")
-    public ResponseEntity<Equipamento> create(@RequestBody Equipamento equipamento) {
-        Equipamento created = repository.save(equipamento);
+    public ResponseEntity<Aparelho> create(@RequestBody Aparelho aparelho) {
+        Aparelho created = repository.save(aparelho);
         return new ResponseEntity<>(created, HttpStatus.OK);
     }
 
     @PutMapping(value = "/", produces = "application/json")
-    public ResponseEntity<Equipamento> update(@RequestBody Equipamento equipamento) {
-        Equipamento updated = repository.save(equipamento);
+    public ResponseEntity<Aparelho> update(@RequestBody Aparelho aparelho) {
+        Aparelho updated = repository.save(aparelho);
         return new ResponseEntity<>(updated, HttpStatus.OK);
     }
 

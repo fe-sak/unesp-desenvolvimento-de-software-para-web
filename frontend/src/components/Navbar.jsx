@@ -10,7 +10,7 @@ function Navbar({ user, isAdmin, onLogout }) {
         <Link to="/">Início</Link>
         {isAdmin && <Link to="/clientes">Clientes</Link>}
         {isAdmin && <Link to="/tecnicos">Técnicos</Link>}
-        <Link to="/equipamentos">Equipamentos</Link>
+        <Link to="/aparelhos">Aparelhos</Link>
         <Link to="/servicos">Servicos</Link>
       </div>
       <div className="navbar-user">

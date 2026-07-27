@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import {
   getServicos, createServico, updateServico, deleteServico,
-  getClientes, createCliente, getTecnicos, createTecnico, getEquipamentos, createEquipamento
+  getClientes, createCliente, getTecnicos, createTecnico, getAparelhos, createAparelho
 } from '../api'
 import ServicosKanban from './ServicosKanban'
 
@@ -9,7 +9,7 @@ function ServicosPage() {
   const [servicos, setServicos] = useState([])
   const [clientes, setClientes] = useState([])
   const [tecnicos, setTecnicos] = useState([])
-  const [equipamentos, setEquipamentos] = useState([])
+  const [aparelhos, setAparelhos] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [sucesso, setSucesso] = useState('')
@@ -28,7 +28,7 @@ function ServicosPage() {
 
   // selecoes
   const [clienteId, setClienteId] = useState('')
-  const [equipamentoId, setEquipamentoId] = useState('')
+  const [aparelhoId, setAparelhoId] = useState('')
   const [tecnicoId, setTecnicoId] = useState('')
   const [data, setData] = useState('')
   const [hora, setHora] = useState('')
@@ -49,12 +49,12 @@ function ServicosPage() {
     setLoading(true)
     try {
       const [agens, clis, tecs, equips] = await Promise.all([
-        getServicos(), getClientes(), getTecnicos(), getEquipamentos()
+        getServicos(), getClientes(), getTecnicos(), getAparelhos()
       ])
       setServicos(agens)
       setClientes(clis)
       setTecnicos(tecs)
-      setEquipamentos(equips)
+      setAparelhos(equips)
     } catch (e) {
       console.log(e)
       setError('Erro ao carregar dados')
@@ -84,7 +84,7 @@ function ServicosPage() {
     setEditando(null)
     setPasso(1)
     setClienteId('')
-    setEquipamentoId('')
+    setAparelhoId('')
     setTecnicoId('')
     setData('')
     setHora('')
@@ -108,7 +108,7 @@ function ServicosPage() {
     resetWizard()
     setEditando(ag)
     setClienteId(ag.cliente?.id || '')
-    setEquipamentoId(ag.equipamento?.id || '')
+    setAparelhoId(ag.aparelho?.id || '')
     setTecnicoId(ag.tecnico?.id || '')
     setData(ag.data ? ag.data.split('-').reverse().join('/') : '')
     setHora(ag.hora ? ag.hora.substring(0, 5) : '')
@@ -133,7 +133,7 @@ function ServicosPage() {
       observacao: observacao || null,
       cliente: clienteId ? { id: parseInt(clienteId) } : null,
       tecnico: tecnicoId ? { id: parseInt(tecnicoId) } : null,
-      equipamento: equipamentoId ? { id: parseInt(equipamentoId) } : null
+      aparelho: aparelhoId ? { id: parseInt(aparelhoId) } : null
     }
 
     try {
@@ -171,13 +171,13 @@ function ServicosPage() {
         defeitoRelatado: novoEquip.defeito || null,
         cliente: clienteId ? { id: parseInt(clienteId) } : null
       }
-      const created = await createEquipamento(dados)
+      const created = await createAparelho(dados)
       await carregar()
-      setEquipamentoId(created.id)
+      setAparelhoId(created.id)
       setCriandoEquip(false)
       setNovoEquip({ tipo: '', marca: '', modelo: '', defeito: '' })
     } catch (err) {
-      alert('Erro ao criar equipamento')
+      alert('Erro ao criar aparelho')
     }
   }
 
@@ -232,13 +232,13 @@ function ServicosPage() {
   const nomeEquip = (e) => {
     if (!e) return '-'
     if (typeof e === 'object') return `${e.tipo} - ${e.modelo || 'sem modelo'}`
-    const found = equipamentos.find(x => x.id === e)
+    const found = aparelhos.find(x => x.id === e)
     return found ? `${found.tipo} - ${found.modelo || 'sem modelo'}` : `ID: ${e}`
   }
 
   const podeAvancar = () => {
     if (passo === 1) return !!clienteId
-    if (passo === 2) return !!equipamentoId
+    if (passo === 2) return !!aparelhoId
     if (passo === 3) return !!tecnicoId
     if (passo === 4) return !!data && !!hora
     return false
@@ -250,7 +250,7 @@ function ServicosPage() {
   }
 
   const tituloEquip = () => {
-    const e = equipamentos.find(x => x.id === parseInt(equipamentoId))
+    const e = aparelhos.find(x => x.id === parseInt(aparelhoId))
     return e ? `${e.tipo} - ${e.modelo || 'sem modelo'}` : 'Nenhum'
   }
 
@@ -260,7 +260,7 @@ function ServicosPage() {
   }
 
   const renderPassos = () => {
-    const passos = ['Cliente', 'Equipamento', 'Técnico', 'Detalhes']
+    const passos = ['Cliente', 'Aparelho', 'Técnico', 'Detalhes']
     return (
       <div className="wizard-steps">
         {passos.map((label, i) => {
@@ -329,13 +329,13 @@ function ServicosPage() {
 
   const renderPasso2 = () => (
     <div>
-      <h3>Passo 2: Equipamento</h3>
+      <h3>Passo 2: Aparelho</h3>
       <br />
       <div className="form-group">
-        <label>Selecione um equipamento</label>
-        <select value={equipamentoId} onChange={(e) => setEquipamentoId(e.target.value)}>
+        <label>Selecione um aparelho</label>
+        <select value={aparelhoId} onChange={(e) => setAparelhoId(e.target.value)}>
           <option value="">Escolha...</option>
-          {equipamentos.filter(eq => {
+          {aparelhos.filter(eq => {
             if (!clienteId) return true
             const cid = typeof eq.cliente === 'object' ? eq.cliente?.id : eq.cliente
             return cid === parseInt(clienteId)
@@ -347,11 +347,11 @@ function ServicosPage() {
 
       {!criandoEquip ? (
         <button type="button" className="btn btn-small" onClick={() => setCriandoEquip(true)}>
-          + Novo equipamento
+          + Novo aparelho
         </button>
       ) : (
         <div className="wizard-inline-form">
-          <h4>Novo equipamento</h4>
+          <h4>Novo aparelho</h4>
           <div className="form-group">
             <label className="required">Tipo</label>
             <input type="text" value={novoEquip.tipo} required
@@ -465,7 +465,7 @@ function ServicosPage() {
       <div className="wizard-review">
         <h4>Resumo</h4>
         <p><strong>Cliente:</strong> {tituloCliente()}</p>
-        <p><strong>Equipamento:</strong> {tituloEquip()}</p>
+        <p><strong>Aparelho:</strong> {tituloEquip()}</p>
         <p><strong>Técnico:</strong> {tituloTecnico()}</p>
         <p><strong>Data:</strong> {data || '-'} às {hora || '-'}</p>
       </div>
@@ -532,7 +532,7 @@ function ServicosPage() {
           servicos={servicos}
           clientes={clientes}
           tecnicos={tecnicos}
-          equipamentos={equipamentos}
+          aparelhos={aparelhos}
           onUpdate={carregar}
         />
       ) : (
@@ -545,7 +545,7 @@ function ServicosPage() {
               <th>Status</th>
               <th>Cliente</th>
               <th>Técnico</th>
-              <th>Equipamento</th>
+              <th>Aparelho</th>
               <th>Obs</th>
               <th className="col-acoes">Acoes</th>
             </tr>
@@ -564,7 +564,7 @@ function ServicosPage() {
                 <td><span className={`status-badge status-${ag.status}`}>{statusLabel(ag.status)}</span></td>
                 <td>{nomeCliente(ag.cliente)}</td>
                 <td>{nomeTecnico(ag.tecnico)}</td>
-                <td>{nomeEquip(ag.equipamento)}</td>
+                <td>{nomeEquip(ag.aparelho)}</td>
                 <td>{ag.observacao || '-'}</td>
                 <td>
                   <button className="btn btn-small" onClick={() => abrirEdicao(ag)}>Editar</button>

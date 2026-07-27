@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { updateServico } from '../api'
 
-function ServicosKanban({ agendamentos, clientes, tecnicos, equipamentos, onUpdate }) {
+function ServicosKanban({ agendamentos, clientes, tecnicos, aparelhos, onUpdate }) {
   const [, forceRender] = useState(0)
   const colunas = {
     PENDENTE: [],
@@ -40,7 +40,7 @@ function ServicosKanban({ agendamentos, clientes, tecnicos, equipamentos, onUpda
   const nomeEquip = (e) => {
     if (!e) return '-'
     if (typeof e === 'object') return e.tipo
-    const found = equipamentos.find(x => x.id === e)
+    const found = aparelhos.find(x => x.id === e)
     return found ? found.tipo : '-'
   }
 
@@ -83,7 +83,7 @@ function ServicosKanban({ agendamentos, clientes, tecnicos, equipamentos, onUpda
         observacao: ag.observacao,
         cliente: ag.cliente?.id ? { id: ag.cliente.id } : null,
         tecnico: ag.tecnico?.id ? { id: ag.tecnico.id } : null,
-        equipamento: ag.equipamento?.id ? { id: ag.equipamento.id } : null
+        aparelho: ag.aparelho?.id ? { id: ag.aparelho.id } : null
       }
       await updateServico(payload)
     } catch (err) {
@@ -118,7 +118,7 @@ function ServicosKanban({ agendamentos, clientes, tecnicos, equipamentos, onUpda
                 onDragEnd={handleDragEnd}
               >
                 <p><strong>{nomeCliente(ag.cliente)}</strong></p>
-                <p>{nomeEquip(ag.equipamento)}</p>
+                <p>{nomeEquip(ag.aparelho)}</p>
                 <p>{nomeTecnico(ag.tecnico)}</p>
                 <p style={{ color: '#999', fontSize: 11 }}>
                   {ag.data ? ag.data.split('-').reverse().join('/') : ''}

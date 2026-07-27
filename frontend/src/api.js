@@ -33,12 +33,12 @@ export const createTecnico = (data) => api.post('/tecnicos/', data).then(r => r.
 export const updateTecnico = (data) => api.put('/tecnicos/', data).then(r => r.data)
 export const deleteTecnico = (id) => api.delete(`/tecnicos/${id}`).then(r => r.data)
 
-// equipamentos
-export const getEquipamentos = () => api.get('/equipamentos/').then(r => r.data)
-export const getEquipamento = (id) => api.get(`/equipamentos/${id}`).then(r => r.data)
-export const createEquipamento = (data) => api.post('/equipamentos/', data).then(r => r.data)
-export const updateEquipamento = (data) => api.put('/equipamentos/', data).then(r => r.data)
-export const deleteEquipamento = (id) => api.delete(`/equipamentos/${id}`).then(r => r.data)
+// aparelhos
+export const getAparelhos = () => api.get('/aparelhos/').then(r => r.data)
+export const getAparelho = (id) => api.get(`/aparelhos/${id}`).then(r => r.data)
+export const createAparelho = (data) => api.post('/aparelhos/', data).then(r => r.data)
+export const updateAparelho = (data) => api.put('/aparelhos/', data).then(r => r.data)
+export const deleteAparelho = (id) => api.delete(`/aparelhos/${id}`).then(r => r.data)
 
 // servicos
 export const getServicos = () => api.get('/servicos/').then(r => r.data)

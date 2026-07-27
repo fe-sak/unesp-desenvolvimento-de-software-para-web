@@ -3,7 +3,8 @@ package com.comp.reparo.model;
 import jakarta.persistence.*;
 
 @Entity
-public class Equipamento {
+@Table(name = "aparelho")
+public class Aparelho {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

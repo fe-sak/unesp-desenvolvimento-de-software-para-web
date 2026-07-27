@@ -49,7 +49,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/tecnicos/**").hasRole("ADMIN")
                         .requestMatchers("/clientes/**").hasRole("ADMIN")
                         .requestMatchers("/servicos/**").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/equipamentos/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/aparelhos/**").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated())
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

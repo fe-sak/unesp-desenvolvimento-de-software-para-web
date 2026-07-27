@@ -6,7 +6,7 @@ import RegisterPage from './pages/RegisterPage'
 import HomePage from './pages/HomePage'
 import ClientesPage from './pages/ClientesPage'
 import TecnicosPage from './pages/TecnicosPage'
-import EquipamentosPage from './pages/EquipamentosPage'
+import AparelhosPage from './pages/AparelhosPage'
 import ServicosPage from './pages/ServicosPage'
 import './App.css'
 
@@ -55,7 +55,7 @@ function App() {
           <Route path="/" element={user ? <HomePage isAdmin={isAdmin} /> : <Navigate to="/login" />} />
           <Route path="/clientes" element={user ? <ClientesPage isAdmin={isAdmin} /> : <Navigate to="/login" />} />
           <Route path="/tecnicos" element={user && isAdmin ? <TecnicosPage /> : <Navigate to="/login" />} />
-          <Route path="/equipamentos" element={user ? <EquipamentosPage /> : <Navigate to="/login" />} />
+          <Route path="/aparelhos" element={user ? <AparelhosPage /> : <Navigate to="/login" />} />
           <Route path="/servicos" element={user ? <ServicosPage /> : <Navigate to="/login" />} />
         </Routes>
       </div>

@@ -24,7 +24,7 @@ public class Servico {
     private Cliente cliente;
 
     @ManyToOne
-    private Equipamento equipamento;
+    private Aparelho aparelho;
 
     @ManyToOne
     private Tecnico tecnico;
@@ -77,12 +77,12 @@ public class Servico {
         this.cliente = cliente;
     }
 
-    public Equipamento getEquipamento() {
-        return equipamento;
+    public Aparelho getAparelho() {
+        return aparelho;
     }
 
-    public void setEquipamento(Equipamento equipamento) {
-        this.equipamento = equipamento;
+    public void setAparelho(Aparelho aparelho) {
+        this.aparelho = aparelho;
     }
 
     public Tecnico getTecnico() {
