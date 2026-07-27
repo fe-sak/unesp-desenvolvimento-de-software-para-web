@@ -6,6 +6,7 @@ function AgendamentosKanban({ agendamentos, clientes, tecnicos, equipamentos, on
   const colunas = {
     PENDENTE: [],
     CONFIRMADO: [],
+    EM_ANDAMENTO: [],
     CANCELADO: [],
     CONCLUIDO: []
   }
@@ -17,6 +18,7 @@ function AgendamentosKanban({ agendamentos, clientes, tecnicos, equipamentos, on
   const labels = {
     PENDENTE: 'Pendente',
     CONFIRMADO: 'Confirmado',
+    EM_ANDAMENTO: 'Em andamento',
     CANCELADO: 'Cancelado',
     CONCLUIDO: 'Concluido'
   }

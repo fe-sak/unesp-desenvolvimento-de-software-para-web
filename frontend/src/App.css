@@ -247,6 +247,11 @@
   color: #2980b9;
 }
 
+.status-EM_ANDAMENTO {
+  background-color: #f0e6f6;
+  color: #8e44ad;
+}
+
 .status-CANCELADO {
   background-color: #fdedec;
   color: #c0392b;
@@ -508,11 +513,13 @@ label.required::after {
 
 .kanban-card.pendente  { border-left-color: #f1c40f; }
 .kanban-card.confirmado { border-left-color: #2980b9; }
+.kanban-card.em_andamento { border-left-color: #8e44ad; }
 .kanban-card.cancelado { border-left-color: #c0392b; }
 .kanban-card.concluido { border-left-color: #27ae60; }
 
 .kanban-coluna.pendente  h4 { border-bottom-color: #f1c40f; }
 .kanban-coluna.confirmado h4 { border-bottom-color: #2980b9; }
+.kanban-coluna.em_andamento h4 { border-bottom-color: #8e44ad; }
 .kanban-coluna.cancelado h4 { border-bottom-color: #c0392b; }
 .kanban-coluna.concluido h4 { border-bottom-color: #27ae60; }
 

@@ -208,6 +208,7 @@ function AgendamentosPage() {
     const map = {
       PENDENTE: 'Pendente',
       CONFIRMADO: 'Confirmado',
+      EM_ANDAMENTO: 'Em andamento',
       CANCELADO: 'Cancelado',
       CONCLUIDO: 'Concluído'
     }
@@ -449,8 +450,9 @@ function AgendamentosPage() {
         <select value={status} onChange={(e) => setStatus(e.target.value)}>
           <option value="PENDENTE">Pendente</option>
           <option value="CONFIRMADO">Confirmado</option>
+          <option value="EM_ANDAMENTO">Em andamento</option>
           <option value="CANCELADO">Cancelado</option>
-              <option value="CONCLUIDO">Concluído</option>
+          <option value="CONCLUIDO">Concluído</option>
         </select>
       </div>
       <div className="form-group">
