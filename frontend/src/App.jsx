@@ -7,7 +7,7 @@ import HomePage from './pages/HomePage'
 import ClientesPage from './pages/ClientesPage'
 import TecnicosPage from './pages/TecnicosPage'
 import EquipamentosPage from './pages/EquipamentosPage'
-import AgendamentosPage from './pages/AgendamentosPage'
+import ServicosPage from './pages/ServicosPage'
 import './App.css'
 
 function App() {
@@ -56,7 +56,7 @@ function App() {
           <Route path="/clientes" element={user ? <ClientesPage isAdmin={isAdmin} /> : <Navigate to="/login" />} />
           <Route path="/tecnicos" element={user && isAdmin ? <TecnicosPage /> : <Navigate to="/login" />} />
           <Route path="/equipamentos" element={user ? <EquipamentosPage /> : <Navigate to="/login" />} />
-          <Route path="/agendamentos" element={user ? <AgendamentosPage /> : <Navigate to="/login" />} />
+          <Route path="/servicos" element={user ? <ServicosPage /> : <Navigate to="/login" />} />
         </Routes>
       </div>
     </div>

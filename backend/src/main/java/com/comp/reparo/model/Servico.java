@@ -5,7 +5,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Entity
-public class Agendamento {
+@Table(name = "servico")
+public class Servico {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,7 +16,7 @@ public class Agendamento {
     private LocalTime hora;
 
     @Enumerated(EnumType.STRING)
-    private StatusAgendamento status;
+    private StatusServico status;
 
     private String observacao;
 
@@ -52,11 +53,11 @@ public class Agendamento {
         this.hora = hora;
     }
 
-    public StatusAgendamento getStatus() {
+    public StatusServico getStatus() {
         return status;
     }
 
-    public void setStatus(StatusAgendamento status) {
+    public void setStatus(StatusServico status) {
         this.status = status;
     }
 

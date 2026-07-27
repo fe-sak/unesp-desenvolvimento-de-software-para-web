@@ -40,11 +40,11 @@ export const createEquipamento = (data) => api.post('/equipamentos/', data).then
 export const updateEquipamento = (data) => api.put('/equipamentos/', data).then(r => r.data)
 export const deleteEquipamento = (id) => api.delete(`/equipamentos/${id}`).then(r => r.data)
 
-// agendamentos
-export const getAgendamentos = () => api.get('/agendamentos/').then(r => r.data)
-export const getAgendamento = (id) => api.get(`/agendamentos/${id}`).then(r => r.data)
-export const createAgendamento = (data) => api.post('/agendamentos/', data).then(r => r.data)
-export const updateAgendamento = (data) => api.put('/agendamentos/', data).then(r => r.data)
-export const deleteAgendamento = (id) => api.delete(`/agendamentos/${id}`).then(r => r.data)
+// servicos
+export const getServicos = () => api.get('/servicos/').then(r => r.data)
+export const getServico = (id) => api.get(`/servicos/${id}`).then(r => r.data)
+export const createServico = (data) => api.post('/servicos/', data).then(r => r.data)
+export const updateServico = (data) => api.put('/servicos/', data).then(r => r.data)
+export const deleteServico = (id) => api.delete(`/servicos/${id}`).then(r => r.data)
 
 export default api

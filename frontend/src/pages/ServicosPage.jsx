@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react'
 import {
-  getAgendamentos, createAgendamento, updateAgendamento, deleteAgendamento,
+  getServicos, createServico, updateServico, deleteServico,
   getClientes, createCliente, getTecnicos, createTecnico, getEquipamentos, createEquipamento
 } from '../api'
-import AgendamentosKanban from './AgendamentosKanban'
+import ServicosKanban from './ServicosKanban'
 
-function AgendamentosPage() {
-  const [agendamentos, setAgendamentos] = useState([])
+function ServicosPage() {
+  const [servicos, setServicos] = useState([])
   const [clientes, setClientes] = useState([])
   const [tecnicos, setTecnicos] = useState([])
   const [equipamentos, setEquipamentos] = useState([])
@@ -49,9 +49,9 @@ function AgendamentosPage() {
     setLoading(true)
     try {
       const [agens, clis, tecs, equips] = await Promise.all([
-        getAgendamentos(), getClientes(), getTecnicos(), getEquipamentos()
+        getServicos(), getClientes(), getTecnicos(), getEquipamentos()
       ])
-      setAgendamentos(agens)
+      setServicos(agens)
       setClientes(clis)
       setTecnicos(tecs)
       setEquipamentos(equips)
@@ -123,7 +123,7 @@ function AgendamentosPage() {
     setEditando(null)
   }
 
-  const salvarAgendamento = async () => {
+  const salvarServico = async () => {
     setError('')
 
     const dados = {
@@ -139,16 +139,16 @@ function AgendamentosPage() {
     try {
       if (editando) {
         dados.id = editando.id
-        await updateAgendamento(dados)
+        await updateServico(dados)
       } else {
-        await createAgendamento(dados)
+        await createServico(dados)
       }
       fecharWizard()
       carregar()
-      setSucesso(editando ? 'Agendamento atualizado!' : 'Agendamento criado!')
+      setSucesso(editando ? 'Servico atualizado!' : 'Servico criado!')
     } catch (err) {
       console.log(err)
-      setError(err.response?.data?.error || 'Erro ao salvar agendamento')
+      setError(err.response?.data?.error || 'Erro ao salvar servico')
     }
   }
 
@@ -196,11 +196,11 @@ function AgendamentosPage() {
   const excluir = async (id) => {
     if (!window.confirm('Tem certeza?')) return
     try {
-      await deleteAgendamento(id)
+      await deleteServico(id)
       carregar()
-      setSucesso('Agendamento excluído!')
+      setSucesso('Servico excluído!')
     } catch (err) {
-      alert('Erro ao excluir agendamento')
+      alert('Erro ao excluir servico')
     }
   }
 
@@ -429,7 +429,7 @@ function AgendamentosPage() {
 
   const renderPasso4 = () => (
     <div>
-      <h3>{editando ? 'Passo 4: Editar agendamento' : 'Passo 4: Detalhes do agendamento'}</h3>
+      <h3>{editando ? 'Passo 4: Editar servico' : 'Passo 4: Detalhes do servico'}</h3>
       <br />
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
         <div className="form-group">
@@ -475,13 +475,13 @@ function AgendamentosPage() {
   return (
     <div className="page">
       <div className="page-header">
-        <h2>Agendamentos</h2>
+        <h2>Servicos</h2>
         <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
           <div className="view-toggle">
             <button className={modo === 'tabela' ? 'active' : ''} onClick={() => setModo('tabela')}>Tabela</button>
             <button className={modo === 'kanban' ? 'active' : ''} onClick={() => setModo('kanban')}>Kanban</button>
           </div>
-          <button className="btn btn-primary" onClick={abrirNovo}>Novo Agendamento</button>
+          <button className="btn btn-primary" onClick={abrirNovo}>Novo Servico</button>
         </div>
       </div>
 
@@ -515,7 +515,7 @@ function AgendamentosPage() {
             ) : (
               <button type="button" className="btn btn-primary"
                 disabled={!podeAvancar()}
-                onClick={salvarAgendamento}>
+                onClick={salvarServico}>
                 {editando ? 'Salvar' : 'Finalizar'}
               </button>
             )}
@@ -528,8 +528,8 @@ function AgendamentosPage() {
       {loading ? (
         <div className="loading-box"><div className="spinner"></div>Carregando...</div>
       ) : modo === 'kanban' ? (
-        <AgendamentosKanban
-          agendamentos={agendamentos}
+        <ServicosKanban
+          servicos={servicos}
           clientes={clientes}
           tecnicos={tecnicos}
           equipamentos={equipamentos}
@@ -551,12 +551,12 @@ function AgendamentosPage() {
             </tr>
           </thead>
           <tbody>
-            {agendamentos.length === 0 && (
+            {servicos.length === 0 && (
               <tr>
-                <td colSpan={9}>Nenhum agendamento cadastrado</td>
+                <td colSpan={9}>Nenhum servico cadastrado</td>
               </tr>
             )}
-            {agendamentos.map((ag) => (
+            {servicos.map((ag) => (
               <tr key={ag.id}>
                 <td>{ag.id}</td>
                 <td>{ag.data ? ag.data.split('-').reverse().join('/') : '-'}</td>
@@ -579,4 +579,4 @@ function AgendamentosPage() {
   )
 }
 
-export default AgendamentosPage
+export default ServicosPage

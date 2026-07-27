@@ -48,7 +48,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/clientes/").permitAll()
                         .requestMatchers("/tecnicos/**").hasRole("ADMIN")
                         .requestMatchers("/clientes/**").hasRole("ADMIN")
-                        .requestMatchers("/agendamentos/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/servicos/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/equipamentos/**").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated())
                 .authenticationProvider(authenticationProvider)

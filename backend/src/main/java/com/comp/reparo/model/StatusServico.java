@@ -1,6 +1,6 @@
 package com.comp.reparo.model;
 
-public enum StatusAgendamento {
+public enum StatusServico {
     PENDENTE,
     CONFIRMADO,
     EM_ANDAMENTO,

@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { updateAgendamento } from '../api'
+import { updateServico } from '../api'
 
-function AgendamentosKanban({ agendamentos, clientes, tecnicos, equipamentos, onUpdate }) {
+function ServicosKanban({ agendamentos, clientes, tecnicos, equipamentos, onUpdate }) {
   const [, forceRender] = useState(0)
   const colunas = {
     PENDENTE: [],
@@ -85,7 +85,7 @@ function AgendamentosKanban({ agendamentos, clientes, tecnicos, equipamentos, on
         tecnico: ag.tecnico?.id ? { id: ag.tecnico.id } : null,
         equipamento: ag.equipamento?.id ? { id: ag.equipamento.id } : null
       }
-      await updateAgendamento(payload)
+      await updateServico(payload)
     } catch (err) {
       console.log('erro ao mover card', err)
       ag.status = statusAntigo
@@ -138,4 +138,4 @@ function AgendamentosKanban({ agendamentos, clientes, tecnicos, equipamentos, on
   )
 }
 
-export default AgendamentosKanban
+export default ServicosKanban

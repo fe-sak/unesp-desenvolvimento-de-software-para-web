@@ -1,19 +1,19 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { getClientes, getTecnicos, getEquipamentos, getAgendamentos } from '../api'
+import { getClientes, getTecnicos, getEquipamentos, getServicos } from '../api'
 
 function HomePage({ isAdmin }) {
-  const [counts, setCounts] = useState({ clientes: 0, tecnicos: 0, equipamentos: 0, agendamentos: 0 })
+  const [counts, setCounts] = useState({ clientes: 0, tecnicos: 0, equipamentos: 0, servicos: 0 })
 
   useEffect(() => {
     if (!isAdmin) {
-      Promise.all([getEquipamentos(), getAgendamentos()]).then(([equips, agens]) => {
-        setCounts({ clientes: 0, tecnicos: 0, equipamentos: equips.length, agendamentos: agens.length })
+      Promise.all([getEquipamentos(), getServicos()]).then(([equips, servs]) => {
+        setCounts({ clientes: 0, tecnicos: 0, equipamentos: equips.length, servicos: servs.length })
       }).catch(() => {})
       return
     }
-    Promise.all([getClientes(), getTecnicos(), getEquipamentos(), getAgendamentos()]).then(([clis, tecs, equips, agens]) => {
-      setCounts({ clientes: clis.length, tecnicos: tecs.length, equipamentos: equips.length, agendamentos: agens.length })
+    Promise.all([getClientes(), getTecnicos(), getEquipamentos(), getServicos()]).then(([clis, tecs, equips, servs]) => {
+      setCounts({ clientes: clis.length, tecnicos: tecs.length, equipamentos: equips.length, servicos: servs.length })
     }).catch(() => {})
   }, [])
 
@@ -44,9 +44,9 @@ function HomePage({ isAdmin }) {
           <div className="home-count">{counts.equipamentos}</div>
           <p>Registre equipamentos com defeitos relatados</p>
         </Link>
-        <Link to="/agendamentos" className="home-card">
-          <h3>Agendamentos</h3>
-          <div className="home-count">{counts.agendamentos}</div>
+        <Link to="/servicos" className="home-card">
+          <h3>Serviços</h3>
+          <div className="home-count">{counts.servicos}</div>
           <p>Agende serviços vinculando cliente, equipamento e técnico</p>
         </Link>
       </div>
