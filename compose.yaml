@@ -29,6 +29,7 @@ services:
       postgres:
         condition: service_healthy
     environment:
+      TZ: America/Sao_Paulo
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-reparo}
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-postgres}
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
