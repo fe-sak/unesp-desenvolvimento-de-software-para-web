@@ -105,7 +105,6 @@ function ServicosPage({ isAdmin, tid }) {
   }
 
   const abrirEdicao = (ag) => {
-    resetWizard()
     setEditando(ag)
     setClienteId(ag.cliente?.id || '')
     setAparelhoId(ag.aparelho?.id || '')
@@ -114,8 +113,7 @@ function ServicosPage({ isAdmin, tid }) {
     setHora(ag.hora ? ag.hora.substring(0, 5) : '')
     setStatus(ag.status || 'PENDENTE')
     setObservacao(ag.observacao || '')
-    setPasso(4)
-    setShowWizard(true)
+    setError('')
   }
 
   const fecharWizard = () => {
@@ -123,7 +121,11 @@ function ServicosPage({ isAdmin, tid }) {
     setEditando(null)
   }
 
-  const salvarServico = async () => {
+  const fecharEdicao = () => {
+    setEditando(null)
+  }
+
+  const salvarServico = async (fromWizard) => {
     setError('')
 
     const dados = {
@@ -143,7 +145,8 @@ function ServicosPage({ isAdmin, tid }) {
       } else {
         await createServico(dados)
       }
-      fecharWizard()
+      if (fromWizard) fecharWizard()
+      else fecharEdicao()
       carregar()
       setSucesso(editando ? 'Servico atualizado!' : 'Servico criado!')
     } catch (err) {
@@ -515,11 +518,54 @@ function ServicosPage({ isAdmin, tid }) {
             ) : (
               <button type="button" className="btn btn-primary"
                 disabled={!podeAvancar()}
-                onClick={salvarServico}>
-                {editando ? 'Salvar' : 'Finalizar'}
+                onClick={() => salvarServico(true)}>
+                Finalizar
               </button>
             )}
           </div>
+        </div>
+      )}
+
+      {editando && !showWizard && (
+        <div className="form-card">
+          <h3>Editar Servico</h3>
+          <br />
+          <form onSubmit={(e) => { e.preventDefault(); salvarServico(false) }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+              <div className="form-group">
+                <label className="required">Data</label>
+                <input type="text" value={data}
+                  onChange={(e) => setData(formatData(e.target.value))}
+                  required placeholder="31/12/2026" />
+              </div>
+              <div className="form-group">
+                <label className="required">Hora</label>
+                <input type="text" value={hora}
+                  onChange={(e) => setHora(formatHora(e.target.value))}
+                  required placeholder="14:30" maxLength={5} />
+              </div>
+            </div>
+            <div className="form-group">
+              <label>Status</label>
+              <select value={status} onChange={(e) => setStatus(e.target.value)}>
+                <option value="PENDENTE">Pendente</option>
+                <option value="CONFIRMADO">Confirmado</option>
+                <option value="EM_ANDAMENTO">Em andamento</option>
+                <option value="CANCELADO">Cancelado</option>
+                <option value="CONCLUIDO">Concluido</option>
+              </select>
+            </div>
+            <div className="form-group">
+              <label>Observacao</label>
+              <textarea value={observacao}
+                onChange={(e) => setObservacao(e.target.value)}
+                placeholder="Observacoes..." rows={3} />
+            </div>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <button type="submit" className="btn btn-primary">Salvar</button>
+              <button type="button" className="btn btn-secondary" onClick={fecharEdicao}>Cancelar</button>
+            </div>
+          </form>
         </div>
       )}
 
