@@ -185,6 +185,7 @@ DELETE /servicos/{id}
 - Registro com escolha de role (admin, cliente, tecnico)
 - Wizard de 4 passos para criar servico (cliente -> aparelho -> tecnico -> detalhes)
 - Quadro kanban com drag and drop para mudar status
-- Dashboard do tecnico com resumo do dia e botoes rapidos
+- Botao aceitar para tecnicos assumirem servicos pendentes
 - Dashboard do cliente com timeline de status por aparelho
-- Fluxo de solicitacao de reparo pelo cliente
+- Solicitacao de reparo pelo cliente (aparelho novo ou existente)
+- Exclusao de servicos restrita ao admin
