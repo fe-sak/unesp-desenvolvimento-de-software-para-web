@@ -24,7 +24,7 @@ function App() {
           localStorage.removeItem('token')
           return
         }
-        setUser({ username: payload.sub, role: payload.role })
+        setUser({ username: payload.sub, role: payload.role, tid: payload.tid, cid: payload.cid })
       } catch (e) {
         localStorage.removeItem('token')
       }
@@ -34,7 +34,7 @@ function App() {
   const onLogin = (token) => {
     localStorage.setItem('token', token)
     const payload = JSON.parse(atob(token.split('.')[1]))
-    setUser({ username: payload.sub, role: payload.role })
+    setUser({ username: payload.sub, role: payload.role, tid: payload.tid, cid: payload.cid })
   }
 
   const onLogout = () => {
@@ -63,7 +63,7 @@ function App() {
           <Route path="/clientes" element={user && isAdmin ? <ClientesPage isAdmin={isAdmin} /> : <Navigate to="/login" />} />
           <Route path="/tecnicos" element={user && isAdmin ? <TecnicosPage /> : <Navigate to="/login" />} />
           <Route path="/aparelhos" element={user && (isAdmin || isTecnico) ? <AparelhosPage /> : <Navigate to="/login" />} />
-          <Route path="/servicos" element={user && (isAdmin || isTecnico) ? <ServicosPage isAdmin={isAdmin} /> : <Navigate to="/login" />} />
+          <Route path="/servicos" element={user && (isAdmin || isTecnico) ? <ServicosPage isAdmin={isAdmin} tid={user.tid} /> : <Navigate to="/login" />} />
           <Route path="/meus-aparelhos" element={user && isCliente ? <MeusAparelhosPage /> : <Navigate to="/login" />} />
           <Route path="/solicitar-reparo" element={user && isCliente ? <SolicitarReparoPage /> : <Navigate to="/login" />} />
         </Routes>

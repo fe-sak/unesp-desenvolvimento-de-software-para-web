@@ -33,13 +33,18 @@ public class JwtService {
                 .map(a -> a.getAuthority())
                 .orElse("ROLE_USER");
 
-        return Jwts.builder()
+        var builder = Jwts.builder()
                 .subject(userDetails.getUsername())
                 .claim("role", role)
                 .issuedAt(Date.from(now))
-                .expiration(Date.from(now.plusMillis(expirationMillis)))
-                .signWith(secretKey)
-                .compact();
+                .expiration(Date.from(now.plusMillis(expirationMillis)));
+
+        if (userDetails instanceof com.comp.reparo.model.User u) {
+            if (u.getTecnico() != null) builder.claim("tid", u.getTecnico().getId());
+            if (u.getCliente() != null) builder.claim("cid", u.getCliente().getId());
+        }
+
+        return builder.signWith(secretKey).compact();
     }
 
     public Optional<String> extractUsername(String token) {

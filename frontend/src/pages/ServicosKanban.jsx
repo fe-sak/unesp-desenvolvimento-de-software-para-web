@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { updateServico } from '../api'
 
-function ServicosKanban({ servicos, clientes, tecnicos, aparelhos, onUpdate, isAdmin }) {
+function ServicosKanban({ servicos, clientes, tecnicos, aparelhos, onUpdate, isAdmin, tid }) {
   const [, forceRender] = useState(0)
   const colunas = {
     PENDENTE: [],
@@ -90,6 +90,27 @@ function ServicosKanban({ servicos, clientes, tecnicos, aparelhos, onUpdate, isA
       ag.status = statusAntigo
       forceRender(n => n + 1)
       onUpdate()
+    }
+  }
+
+  const aceitar = async (ag) => {
+    try {
+      const payload = {
+        id: ag.id,
+        data: ag.data,
+        hora: ag.hora,
+        status: 'CONFIRMADO',
+        observacao: ag.observacao,
+        cliente: ag.cliente?.id ? { id: ag.cliente.id } : null,
+        tecnico: { id: tid },
+        aparelho: ag.aparelho?.id ? { id: ag.aparelho.id } : null
+      }
+      await updateServico(payload)
+      ag.status = 'CONFIRMADO'
+      ag.tecnico = tecnicos.find(t => t.id === tid) || { id: tid }
+      forceRender(n => n + 1)
+    } catch (err) {
+      console.log('erro ao aceitar', err)
     }
   }
 
@@ -198,10 +219,16 @@ function ServicosKanban({ servicos, clientes, tecnicos, aparelhos, onUpdate, isA
                   {ag.data ? ag.data.split('-').reverse().join('/') : ''}
                   {ag.hora ? ' ' + ag.hora.substring(0, 5) : ''}
                 </p>
-                {(status === 'PENDENTE' || status === 'CONFIRMADO') && (
+                {(status === 'PENDENTE' || status === 'CONFIRMADO') && ag.tecnico && (
                   <button className="btn btn-small" style={{ marginTop: 4 }}
                     onClick={(e) => { e.stopPropagation(); trocarStatus(ag, 'EM_ANDAMENTO') }}>
                     Iniciar
+                  </button>
+                )}
+                {status === 'PENDENTE' && !ag.tecnico && tid && (
+                  <button className="btn btn-small" style={{ marginTop: 4 }}
+                    onClick={(e) => { e.stopPropagation(); aceitar(ag) }}>
+                    Aceitar
                   </button>
                 )}
                 {status === 'EM_ANDAMENTO' && (

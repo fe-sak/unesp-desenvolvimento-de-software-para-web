@@ -27,7 +27,7 @@ public class ServicoController {
     public List<Servico> findAll() {
         User user = getCurrentUser();
         if (user.isTecnico() && user.getTecnico() != null) {
-            return repository.findByTecnicoId(user.getTecnico().getId());
+            return repository.findByTecnicoIdOrTecnicoIsNull(user.getTecnico().getId());
         }
         if (user.isCliente() && user.getCliente() != null) {
             return repository.findByClienteId(user.getCliente().getId());

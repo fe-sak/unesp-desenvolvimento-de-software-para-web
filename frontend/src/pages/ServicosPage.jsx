@@ -5,7 +5,7 @@ import {
 } from '../api'
 import ServicosKanban from './ServicosKanban'
 
-function ServicosPage({ isAdmin }) {
+function ServicosPage({ isAdmin, tid }) {
   const [servicos, setServicos] = useState([])
   const [clientes, setClientes] = useState([])
   const [tecnicos, setTecnicos] = useState([])
@@ -535,6 +535,7 @@ function ServicosPage({ isAdmin }) {
           aparelhos={aparelhos}
           onUpdate={carregar}
           isAdmin={isAdmin}
+          tid={tid}
         />
       ) : (
         <table className="table">
