@@ -44,6 +44,13 @@ public class ServicoController {
 
     @PostMapping(value = "/", produces = "application/json")
     public ResponseEntity<Servico> create(@RequestBody Servico servico) {
+        User user = getCurrentUser();
+        if (user.isCliente() && servico.getCliente() == null) {
+            servico.setCliente(user.getCliente());
+        }
+        if (servico.getData() == null) {
+            servico.setData(java.time.LocalDate.now());
+        }
         Servico created = repository.save(servico);
 
         return new ResponseEntity<Servico>(created, HttpStatus.OK);

@@ -43,6 +43,10 @@ public class AparelhoController {
 
     @PostMapping(value = "/", produces = "application/json")
     public ResponseEntity<Aparelho> create(@RequestBody Aparelho aparelho) {
+        User user = getCurrentUser();
+        if (user.isCliente() && aparelho.getCliente() == null) {
+            aparelho.setCliente(user.getCliente());
+        }
         Aparelho created = repository.save(aparelho);
         return new ResponseEntity<>(created, HttpStatus.OK);
     }
