@@ -91,11 +91,6 @@ public class DataSeeder implements CommandLineRunner {
         t1.setEspecialidade("Eletronica");
         tecnicoRepository.save(t1);
 
-        Tecnico t2 = new Tecnico();
-        t2.setNome("Ana Refrigeracao");
-        t2.setEspecialidade("Refrigeracao");
-        tecnicoRepository.save(t2);
-
         User tecnicoUser = new User();
         tecnicoUser.setUsername("carlos");
         tecnicoUser.setPassword(passwordEncoder.encode("123"));
@@ -161,7 +156,7 @@ public class DataSeeder implements CommandLineRunner {
         s3.setHora(LocalTime.of(14, 0));
         s3.setStatus(StatusServico.EM_ANDAMENTO);
         s3.setCliente(c3);
-        s3.setTecnico(t2);
+        s3.setTecnico(t1);
         s3.setAparelho(a3);
         servicoRepository.save(s3);
 
@@ -179,7 +174,7 @@ public class DataSeeder implements CommandLineRunner {
         s5.setHora(LocalTime.of(15, 30));
         s5.setStatus(StatusServico.CANCELADO);
         s5.setCliente(c2);
-        s5.setTecnico(t2);
+        s5.setTecnico(t1);
         s5.setAparelho(a2);
         servicoRepository.save(s5);
     }
