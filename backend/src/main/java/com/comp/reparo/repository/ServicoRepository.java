@@ -8,4 +8,5 @@ import com.comp.reparo.model.Servico;
 
 public interface ServicoRepository extends JpaRepository<Servico, Long> {
     List<Servico> findByClienteId(Long clienteId);
+    List<Servico> findByTecnicoId(Long tecnicoId);
 }

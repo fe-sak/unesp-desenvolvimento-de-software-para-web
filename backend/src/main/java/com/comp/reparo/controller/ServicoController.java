@@ -26,7 +26,10 @@ public class ServicoController {
     @GetMapping(value = "/", produces = "application/json")
     public List<Servico> findAll() {
         User user = getCurrentUser();
-        if (!user.isAdmin() && user.getCliente() != null) {
+        if (user.isTecnico() && user.getTecnico() != null) {
+            return repository.findByTecnicoId(user.getTecnico().getId());
+        }
+        if (user.isCliente() && user.getCliente() != null) {
             return repository.findByClienteId(user.getCliente().getId());
         }
         return repository.findAll();
