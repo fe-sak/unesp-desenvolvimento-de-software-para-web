@@ -8,6 +8,8 @@ import ClientesPage from './pages/ClientesPage'
 import TecnicosPage from './pages/TecnicosPage'
 import AparelhosPage from './pages/AparelhosPage'
 import ServicosPage from './pages/ServicosPage'
+import MeusAparelhosPage from './pages/MeusAparelhosPage'
+import SolicitarReparoPage from './pages/SolicitarReparoPage'
 import './App.css'
 
 function App() {
@@ -18,14 +20,12 @@ function App() {
     if (token) {
       try {
         const payload = JSON.parse(atob(token.split('.')[1]))
-        console.log('token payload (init):', payload)
         if (!payload.role) {
           localStorage.removeItem('token')
           return
         }
         setUser({ username: payload.sub, role: payload.role })
       } catch (e) {
-        console.log('token invalido')
         localStorage.removeItem('token')
       }
     }
@@ -34,7 +34,6 @@ function App() {
   const onLogin = (token) => {
     localStorage.setItem('token', token)
     const payload = JSON.parse(atob(token.split('.')[1]))
-    console.log('token payload:', payload)
     setUser({ username: payload.sub, role: payload.role })
   }
 
@@ -44,19 +43,29 @@ function App() {
   }
 
   const isAdmin = user && user.role === 'ROLE_ADMIN'
+  const isTecnico = user && user.role === 'ROLE_TECNICO'
+  const isCliente = user && user.role === 'ROLE_USER'
+
+  const getHomeRedirect = () => {
+    if (isTecnico) return '/servicos'
+    if (isCliente) return '/meus-aparelhos'
+    return '/'
+  }
 
   return (
     <div>
-      {user && <Navbar user={user} isAdmin={isAdmin} onLogout={onLogout} />}
+      {user && <Navbar user={user} isAdmin={isAdmin} isTecnico={isTecnico} isCliente={isCliente} onLogout={onLogout} />}
       <div className="container">
         <Routes>
-          <Route path="/login" element={!user ? <LoginPage onLogin={onLogin} /> : <Navigate to="/" />} />
-          <Route path="/register" element={!user ? <RegisterPage onLogin={onLogin} /> : <Navigate to="/" />} />
-          <Route path="/" element={user ? <HomePage isAdmin={isAdmin} /> : <Navigate to="/login" />} />
-          <Route path="/clientes" element={user ? <ClientesPage isAdmin={isAdmin} /> : <Navigate to="/login" />} />
+          <Route path="/login" element={!user ? <LoginPage onLogin={onLogin} /> : <Navigate to={getHomeRedirect()} />} />
+          <Route path="/register" element={!user ? <RegisterPage onLogin={onLogin} /> : <Navigate to={getHomeRedirect()} />} />
+          <Route path="/" element={user ? <HomePage isAdmin={isAdmin} isTecnico={isTecnico} isCliente={isCliente} /> : <Navigate to="/login" />} />
+          <Route path="/clientes" element={user && isAdmin ? <ClientesPage isAdmin={isAdmin} /> : <Navigate to="/login" />} />
           <Route path="/tecnicos" element={user && isAdmin ? <TecnicosPage /> : <Navigate to="/login" />} />
-          <Route path="/aparelhos" element={user ? <AparelhosPage /> : <Navigate to="/login" />} />
-          <Route path="/servicos" element={user ? <ServicosPage /> : <Navigate to="/login" />} />
+          <Route path="/aparelhos" element={user && (isAdmin || isTecnico) ? <AparelhosPage /> : <Navigate to="/login" />} />
+          <Route path="/servicos" element={user && (isAdmin || isTecnico) ? <ServicosPage /> : <Navigate to="/login" />} />
+          <Route path="/meus-aparelhos" element={user && isCliente ? <MeusAparelhosPage /> : <Navigate to="/login" />} />
+          <Route path="/solicitar-reparo" element={user && isCliente ? <SolicitarReparoPage /> : <Navigate to="/login" />} />
         </Routes>
       </div>
     </div>
