@@ -616,7 +616,7 @@ function ServicosPage({ isAdmin, tid }) {
                 <td>{ag.observacao || '-'}</td>
                 <td>
                   <button className="btn btn-small" onClick={() => abrirEdicao(ag)}>Editar</button>
-                  <button className="btn btn-small btn-danger" onClick={() => excluir(ag.id)}>Excluir</button>
+                  {isAdmin && <button className="btn btn-small btn-danger" onClick={() => excluir(ag.id)}>Excluir</button>}
                 </td>
               </tr>
             ))}

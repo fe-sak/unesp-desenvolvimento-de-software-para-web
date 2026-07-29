@@ -309,6 +309,11 @@ label.required::after {
   white-space: nowrap;
 }
 
+td:has(.btn-small) {
+  text-align: center;
+  white-space: nowrap;
+}
+
 /* home page */
 .home-page {
   text-align: center;

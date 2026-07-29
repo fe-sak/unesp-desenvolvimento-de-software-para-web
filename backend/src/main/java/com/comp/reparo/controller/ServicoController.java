@@ -65,6 +65,10 @@ public class ServicoController {
 
     @DeleteMapping(value = "/{id}", produces = "application/text")
     public String deletar(@PathVariable("id") Long id) {
+        User user = getCurrentUser();
+        if (!user.isAdmin()) {
+            throw new org.springframework.security.access.AccessDeniedException("Apenas admin pode excluir");
+        }
         repository.deleteById(id);
 
         return "ok";
