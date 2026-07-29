@@ -7,5 +7,6 @@ public record RegisterRequest(
         @NotBlank String password,
         String name,
         boolean admin,
-        Long clienteId) {
+        Long clienteId,
+        Long tecnicoId) {
 }

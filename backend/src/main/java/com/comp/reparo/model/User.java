@@ -33,6 +33,10 @@ public class User implements UserDetails {
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 
+    @ManyToOne
+    @JoinColumn(name = "tecnico_id")
+    private Tecnico tecnico;
+
     public User() {
     }
 
@@ -44,12 +48,6 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if (this.role == UserRole.ADMIN) {
-            return List.of(
-                    new SimpleGrantedAuthority(UserRole.ADMIN.getRoleName()),
-                    new SimpleGrantedAuthority(UserRole.USER.getRoleName()));
-        }
-
         return List.of(new SimpleGrantedAuthority(this.role.getRoleName()));
     }
 
@@ -87,7 +85,23 @@ public class User implements UserDetails {
         this.cliente = cliente;
     }
 
+    public Tecnico getTecnico() {
+        return tecnico;
+    }
+
+    public void setTecnico(Tecnico tecnico) {
+        this.tecnico = tecnico;
+    }
+
     public boolean isAdmin() {
         return this.role == UserRole.ADMIN;
+    }
+
+    public boolean isTecnico() {
+        return this.role == UserRole.TECNICO;
+    }
+
+    public boolean isCliente() {
+        return this.role == UserRole.USER && this.cliente != null;
     }
 }
