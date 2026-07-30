@@ -160,17 +160,8 @@ function ServicosKanban({ servicos, clientes, tecnicos, aparelhos, onUpdate, isA
     }
   }
 
-  const hoje = new Date().toISOString().split('T')[0]
-  const servicosHoje = servicos.filter(ag => ag.data === hoje)
-  const pendentesHoje = servicosHoje.filter(ag => ag.status === 'PENDENTE' || ag.status === 'CONFIRMADO').length
-  const andamentoHoje = servicosHoje.filter(ag => ag.status === 'EM_ANDAMENTO').length
-
   return (
     <div>
-      <div className="kanban-summary">
-        Hoje: <strong>{pendentesHoje} pendentes</strong>, <strong>{andamentoHoje} em andamento</strong>
-        {servicosHoje.length === 0 && ' — nenhum servico hoje'}
-      </div>
       <div className="kanban-board">
       {Object.entries(colunas).map(([status, cards]) => (
         <div
