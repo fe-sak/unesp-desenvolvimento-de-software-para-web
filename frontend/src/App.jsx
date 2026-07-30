@@ -59,7 +59,7 @@ function App() {
         <Routes>
           <Route path="/login" element={!user ? <LoginPage onLogin={onLogin} /> : <Navigate to={getHomeRedirect()} />} />
           <Route path="/register" element={!user ? <RegisterPage onLogin={onLogin} /> : <Navigate to={getHomeRedirect()} />} />
-          <Route path="/" element={user ? <HomePage isAdmin={isAdmin} isTecnico={isTecnico} isCliente={isCliente} /> : <Navigate to="/login" />} />
+          <Route path="/" element={user ? (isCliente ? <Navigate to="/meus-aparelhos" /> : <HomePage isAdmin={isAdmin} isTecnico={isTecnico} isCliente={isCliente} />) : <Navigate to="/login" />} />
           <Route path="/clientes" element={user && isAdmin ? <ClientesPage isAdmin={isAdmin} /> : <Navigate to="/login" />} />
           <Route path="/tecnicos" element={user && isAdmin ? <TecnicosPage /> : <Navigate to="/login" />} />
           <Route path="/aparelhos" element={user && (isAdmin || isTecnico) ? <AparelhosPage /> : <Navigate to="/login" />} />
