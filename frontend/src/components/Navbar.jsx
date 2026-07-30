@@ -7,12 +7,11 @@ function Navbar({ user, isAdmin, isTecnico, isCliente, onLogout }) {
         <Link to="/">Gestão de Reparos</Link>
       </div>
       <div className="navbar-links">
-        <Link to="/">Início</Link>
+        {(isAdmin || isTecnico) && <Link to="/">Início</Link>}
         {isAdmin && <Link to="/clientes">Clientes</Link>}
         {isAdmin && <Link to="/tecnicos">Técnicos</Link>}
         {(isAdmin || isTecnico) && <Link to="/aparelhos">Aparelhos</Link>}
         {(isAdmin || isTecnico) && <Link to="/servicos">Serviços</Link>}
-        {isCliente && <Link to="/meus-aparelhos">Meus Aparelhos</Link>}
         {isCliente && <Link to="/solicitar-reparo">Solicitar Reparo</Link>}
       </div>
       <div className="navbar-user">
