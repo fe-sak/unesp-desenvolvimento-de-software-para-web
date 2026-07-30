@@ -1,19 +1,23 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { register, getClientes } from '../api'
+import { register, getClientes, getTecnicos } from '../api'
 
 function RegisterPage({ onLogin }) {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [name, setName] = useState('')
   const [admin, setAdmin] = useState(false)
+  const [tipo, setTipo] = useState('cliente')
   const [clienteId, setClienteId] = useState('')
+  const [tecnicoId, setTecnicoId] = useState('')
   const [clientes, setClientes] = useState([])
+  const [tecnicos, setTecnicos] = useState([])
   const [err, setErr] = useState('')
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     getClientes().then(setClientes).catch(() => {})
+    getTecnicos().then(setTecnicos).catch(() => {})
   }, [])
 
   const handleSubmit = async (e) => {
@@ -22,8 +26,13 @@ function RegisterPage({ onLogin }) {
     setLoading(true)
 
     try {
-      const id = admin ? undefined : (clienteId || undefined)
-      const data = await register(username, password, name || undefined, admin, id ? parseInt(id) : undefined)
+      let cid = undefined
+      let tid = undefined
+      if (!admin) {
+        if (tipo === 'cliente' && clienteId) cid = parseInt(clienteId)
+        if (tipo === 'tecnico' && tecnicoId) tid = parseInt(tecnicoId)
+      }
+      const data = await register(username, password, name || undefined, admin, cid, tid)
       onLogin(data.token)
     } catch (error) {
       console.log(error)
@@ -85,15 +94,51 @@ function RegisterPage({ onLogin }) {
           </div>
 
           {!admin && (
-            <div className="form-group">
-              <label>Cliente</label>
-              <select value={clienteId} onChange={(e) => setClienteId(e.target.value)} required={!admin}>
-                <option value="">Selecione seu cadastro...</option>
-                {clientes.map((c) => (
-                  <option key={c.id} value={c.id}>{c.nome}</option>
-                ))}
-              </select>
-            </div>
+            <>
+              <div className="form-group">
+                <label>Tipo de conta</label>
+                <div style={{ display: 'flex', gap: '15px', marginTop: 4 }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: 4, fontWeight: 'normal' }}>
+                    <input type="radio" name="tipo" checked={tipo === 'cliente'} onChange={() => setTipo('cliente')} style={{ width: 'auto' }} />
+                    Cliente
+                  </label>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: 4, fontWeight: 'normal' }}>
+                    <input type="radio" name="tipo" checked={tipo === 'tecnico'} onChange={() => setTipo('tecnico')} style={{ width: 'auto' }} />
+                    Técnico
+                  </label>
+                </div>
+              </div>
+
+              {tipo === 'cliente' && (
+                <div className="form-group">
+                  <label>Cliente</label>
+                  <select value={clienteId} onChange={(e) => setClienteId(e.target.value)} required>
+                    <option value="">Selecione seu cadastro...</option>
+                    {clientes.filter(c => !c.hasUsuario).map((c) => (
+                      <option key={c.id} value={c.id}>{c.nome}</option>
+                    ))}
+                  </select>
+                  {clientes.filter(c => !c.hasUsuario).length === 0 && (
+                    <p style={{ fontSize: 11, color: '#999', marginTop: 4 }}>Nenhum cliente disponivel</p>
+                  )}
+                </div>
+              )}
+
+              {tipo === 'tecnico' && (
+                <div className="form-group">
+                  <label>Técnico</label>
+                  <select value={tecnicoId} onChange={(e) => setTecnicoId(e.target.value)} required>
+                    <option value="">Selecione seu cadastro...</option>
+                    {tecnicos.filter(t => !t.hasUsuario).map((t) => (
+                      <option key={t.id} value={t.id}>{t.nome}</option>
+                    ))}
+                  </select>
+                  {tecnicos.filter(t => !t.hasUsuario).length === 0 && (
+                    <p style={{ fontSize: 11, color: '#999', marginTop: 4 }}>Nenhum tecnico disponivel</p>
+                  )}
+                </div>
+              )}
+            </>
           )}
 
           <button type="submit" className="btn btn-primary" disabled={loading}>
