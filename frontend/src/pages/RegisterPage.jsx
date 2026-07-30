@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { register, getClientes, getTecnicos } from '../api'
+import { register, getClientes, getTecnicos, createCliente } from '../api'
 
 function RegisterPage({ onLogin }) {
   const [username, setUsername] = useState('')
@@ -14,6 +14,8 @@ function RegisterPage({ onLogin }) {
   const [tecnicos, setTecnicos] = useState([])
   const [err, setErr] = useState('')
   const [loading, setLoading] = useState(false)
+  const [novoCliente, setNovoCliente] = useState({ nome: '', telefone: '', email: '' })
+  const [modoCliente, setModoCliente] = useState('existente')
 
   useEffect(() => {
     getClientes().then(setClientes).catch(() => {})
@@ -29,7 +31,14 @@ function RegisterPage({ onLogin }) {
       let cid = undefined
       let tid = undefined
       if (!admin) {
-        if (tipo === 'cliente' && clienteId) cid = parseInt(clienteId)
+        if (tipo === 'cliente') {
+          if (modoCliente === 'novo') {
+            const created = await createCliente(novoCliente)
+            cid = created.id
+          } else if (clienteId) {
+            cid = parseInt(clienteId)
+          }
+        }
         if (tipo === 'tecnico' && tecnicoId) tid = parseInt(tecnicoId)
       }
       const data = await register(username, password, name || undefined, admin, cid, tid)
@@ -110,18 +119,53 @@ function RegisterPage({ onLogin }) {
               </div>
 
               {tipo === 'cliente' && (
-                <div className="form-group">
-                  <label>Cliente</label>
-                  <select value={clienteId} onChange={(e) => setClienteId(e.target.value)} required>
-                    <option value="">Selecione seu cadastro...</option>
-                    {clientes.filter(c => !c.hasUsuario).map((c) => (
-                      <option key={c.id} value={c.id}>{c.nome}</option>
-                    ))}
-                  </select>
-                  {clientes.filter(c => !c.hasUsuario).length === 0 && (
-                    <p style={{ fontSize: 11, color: '#999', marginTop: 4 }}>Nenhum cliente disponivel</p>
+                <>
+                  <div className="form-group">
+                    <label>Cadastro</label>
+                    <div style={{ display: 'flex', gap: '15px', marginTop: 4 }}>
+                      <label style={{ display: 'flex', alignItems: 'center', gap: 4, fontWeight: 'normal' }}>
+                        <input type="radio" name="modoCliente" checked={modoCliente === 'existente'} onChange={() => setModoCliente('existente')} style={{ width: 'auto' }} />
+                        Ja sou cliente
+                      </label>
+                      <label style={{ display: 'flex', alignItems: 'center', gap: 4, fontWeight: 'normal' }}>
+                        <input type="radio" name="modoCliente" checked={modoCliente === 'novo'} onChange={() => setModoCliente('novo')} style={{ width: 'auto' }} />
+                        Novo por aqui
+                      </label>
+                    </div>
+                  </div>
+
+                  {modoCliente === 'existente' ? (
+                    <div className="form-group">
+                      <select value={clienteId} onChange={(e) => setClienteId(e.target.value)} required>
+                        <option value="">Selecione seu cadastro...</option>
+                        {clientes.filter(c => !c.hasUsuario).map((c) => (
+                          <option key={c.id} value={c.id}>{c.nome}</option>
+                        ))}
+                      </select>
+                    </div>
+                  ) : (
+                    <div style={{ background: '#fafafa', border: '1px solid #ddd', padding: 12, borderRadius: 4, marginBottom: 12 }}>
+                      <div className="form-group">
+                        <label className="required">Nome completo</label>
+                        <input type="text" value={novoCliente.nome}
+                          onChange={(e) => setNovoCliente({ ...novoCliente, nome: e.target.value })}
+                          required placeholder="Seu nome completo" />
+                      </div>
+                      <div className="form-group">
+                        <label>Telefone</label>
+                        <input type="text" value={novoCliente.telefone}
+                          onChange={(e) => setNovoCliente({ ...novoCliente, telefone: e.target.value })}
+                          placeholder="(11) 99999-9999" />
+                      </div>
+                      <div className="form-group">
+                        <label>Email</label>
+                        <input type="email" value={novoCliente.email}
+                          onChange={(e) => setNovoCliente({ ...novoCliente, email: e.target.value })}
+                          placeholder="seu@email.com" />
+                      </div>
+                    </div>
                   )}
-                </div>
+                </>
               )}
 
               {tipo === 'tecnico' && (
