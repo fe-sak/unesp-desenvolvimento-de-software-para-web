@@ -19,9 +19,9 @@ function HomePage({ isAdmin }) {
 
   return (
     <div className="home-page">
-      <h1>Sistema de Reparos</h1>
+      <h1>Gestão de Reparos</h1>
       <br />
-      <p>Bem-vindo ao sistema de gerenciamento de reparos.</p>
+      <p>Bem-vindo ao sistema de gestao de reparos.</p>
       <p>Aqui você pode gerenciar clientes, técnicos, aparelhos e serviços.</p>
       <br />
       <div className="home-cards">

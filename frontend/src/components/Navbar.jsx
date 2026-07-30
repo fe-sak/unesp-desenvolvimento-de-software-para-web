@@ -4,7 +4,7 @@ function Navbar({ user, isAdmin, isTecnico, isCliente, onLogout }) {
   return (
     <nav className="navbar">
       <div className="navbar-brand">
-        <Link to="/">Reparo</Link>
+        <Link to="/">Gestão de Reparos</Link>
       </div>
       <div className="navbar-links">
         <Link to="/">Início</Link>
