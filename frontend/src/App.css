@@ -550,3 +550,79 @@ label.required::after {
   color: white;
   border-color: #2980b9;
 }
+
+/* timeline */
+.mini-timeline {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+}
+
+.timeline-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  position: relative;
+}
+
+.timeline-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #ddd;
+  border: 2px solid #ccc;
+  z-index: 1;
+}
+
+.timeline-dot.done {
+  background: #27ae60;
+  border-color: #27ae60;
+}
+
+.timeline-line {
+  position: absolute;
+  top: 5px;
+  left: 50%;
+  width: 100%;
+  height: 2px;
+  background: #ddd;
+}
+
+.timeline-line.done {
+  background: #27ae60;
+}
+
+.timeline-label {
+  font-size: 10px;
+  color: #999;
+  margin-top: 4px;
+  text-align: center;
+}
+
+.timeline-step:first-child .timeline-label {
+  text-align: left;
+}
+
+.timeline-step:last-child .timeline-label {
+  text-align: right;
+}
+
+/* aparelhos */
+.aparelhos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 15px;
+}
+
+.aparelho-card {
+  background: white;
+  border: 1px solid #ddd;
+  padding: 15px;
+  border-radius: 6px;
+}
+
+.aparelho-card h3 {
+  color: #2c3e50;
+  margin-bottom: 4px;
+}
