@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { updateServico } from '../api'
 
-function ServicosKanban({ agendamentos, clientes, tecnicos, aparelhos, onUpdate }) {
+function ServicosKanban({ servicos, clientes, tecnicos, aparelhos, onUpdate }) {
   const [, forceRender] = useState(0)
   const colunas = {
     PENDENTE: [],
@@ -11,7 +11,7 @@ function ServicosKanban({ agendamentos, clientes, tecnicos, aparelhos, onUpdate 
     CONCLUIDO: []
   }
 
-  agendamentos.forEach(ag => {
+  servicos.forEach(ag => {
     if (colunas[ag.status]) colunas[ag.status].push(ag)
   })
 
@@ -67,7 +67,7 @@ function ServicosKanban({ agendamentos, clientes, tecnicos, aparelhos, onUpdate 
     e.currentTarget.classList.remove('drag-over')
 
     const id = parseInt(e.dataTransfer.getData('text/plain'))
-    const ag = agendamentos.find(a => a.id === id)
+    const ag = servicos.find(a => a.id === id)
     if (!ag || ag.status === novoStatus) return
 
     const statusAntigo = ag.status
@@ -94,8 +94,33 @@ function ServicosKanban({ agendamentos, clientes, tecnicos, aparelhos, onUpdate 
     }
   }
 
+  const trocarStatus = async (ag, novoStatus) => {
+    const statusAntigo = ag.status
+    ag.status = novoStatus
+    forceRender(n => n + 1)
+
+    try {
+      const payload = {
+        id: ag.id,
+        data: ag.data,
+        hora: ag.hora,
+        status: novoStatus,
+        observacao: ag.observacao,
+        cliente: ag.cliente?.id ? { id: ag.cliente.id } : null,
+        tecnico: ag.tecnico?.id ? { id: ag.tecnico.id } : null,
+        aparelho: ag.aparelho?.id ? { id: ag.aparelho.id } : null
+      }
+      await updateServico(payload)
+    } catch (err) {
+      ag.status = statusAntigo
+      forceRender(n => n + 1)
+      onUpdate()
+    }
+  }
+
   return (
-    <div className="kanban-board">
+    <div>
+      <div className="kanban-board">
       {Object.entries(colunas).map(([status, cards]) => (
         <div
           key={status}
@@ -124,6 +149,18 @@ function ServicosKanban({ agendamentos, clientes, tecnicos, aparelhos, onUpdate 
                   {ag.data ? ag.data.split('-').reverse().join('/') : ''}
                   {ag.hora ? ' ' + ag.hora.substring(0, 5) : ''}
                 </p>
+                {(status === 'PENDENTE' || status === 'CONFIRMADO') && (
+                  <button className="btn btn-small" style={{ marginTop: 4 }}
+                    onClick={(e) => { e.stopPropagation(); trocarStatus(ag, 'EM_ANDAMENTO') }}>
+                    Iniciar
+                  </button>
+                )}
+                {status === 'EM_ANDAMENTO' && (
+                  <button className="btn btn-small" style={{ marginTop: 4 }}
+                    onClick={(e) => { e.stopPropagation(); trocarStatus(ag, 'CONCLUIDO') }}>
+                    Concluir
+                  </button>
+                )}
               </div>
             ))}
             {cards.length === 0 && (
@@ -134,6 +171,7 @@ function ServicosKanban({ agendamentos, clientes, tecnicos, aparelhos, onUpdate 
           </div>
         </div>
       ))}
+    </div>
     </div>
   )
 }
