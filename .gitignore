@@ -31,6 +31,8 @@ application-local.properties
 node_modules/
 dist/
 build/
+.vite/
 
 # Misc
 out/
+notas.md
