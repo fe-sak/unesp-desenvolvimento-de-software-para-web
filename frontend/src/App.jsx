@@ -63,7 +63,7 @@ function App() {
           <Route path="/clientes" element={user && isAdmin ? <ClientesPage isAdmin={isAdmin} /> : <Navigate to="/login" />} />
           <Route path="/tecnicos" element={user && isAdmin ? <TecnicosPage /> : <Navigate to="/login" />} />
           <Route path="/aparelhos" element={user && (isAdmin || isTecnico) ? <AparelhosPage /> : <Navigate to="/login" />} />
-          <Route path="/servicos" element={user && (isAdmin || isTecnico) ? <ServicosPage /> : <Navigate to="/login" />} />
+          <Route path="/servicos" element={user && (isAdmin || isTecnico) ? <ServicosPage isAdmin={isAdmin} /> : <Navigate to="/login" />} />
           <Route path="/meus-aparelhos" element={user && isCliente ? <MeusAparelhosPage /> : <Navigate to="/login" />} />
           <Route path="/solicitar-reparo" element={user && isCliente ? <SolicitarReparoPage /> : <Navigate to="/login" />} />
         </Routes>

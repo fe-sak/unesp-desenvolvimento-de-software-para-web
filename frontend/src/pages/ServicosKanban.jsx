@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { updateServico } from '../api'
 
-function ServicosKanban({ servicos, clientes, tecnicos, aparelhos, onUpdate }) {
+function ServicosKanban({ servicos, clientes, tecnicos, aparelhos, onUpdate, isAdmin }) {
   const [, forceRender] = useState(0)
   const colunas = {
     PENDENTE: [],
@@ -24,10 +24,9 @@ function ServicosKanban({ servicos, clientes, tecnicos, aparelhos, onUpdate }) {
   }
 
   const nomeCliente = (c) => {
-    if (!c) return '-'
-    if (typeof c === 'object') return c.nome
-    const found = clientes.find(x => x.id === c)
-    return found ? found.nome : '-'
+    if (!c) return { nome: '-' }
+    const found = typeof c === 'object' ? c : clientes.find(x => x.id === c)
+    return found || { nome: '-' }
   }
 
   const nomeTecnico = (t) => {
@@ -118,8 +117,39 @@ function ServicosKanban({ servicos, clientes, tecnicos, aparelhos, onUpdate }) {
     }
   }
 
+  const trocarTecnico = async (ag, novoTecnicoId) => {
+    const tid = parseInt(novoTecnicoId)
+    if (!tid) return
+    try {
+      const payload = {
+        id: ag.id,
+        data: ag.data,
+        hora: ag.hora,
+        status: ag.status,
+        observacao: ag.observacao,
+        cliente: ag.cliente?.id ? { id: ag.cliente.id } : null,
+        tecnico: { id: tid },
+        aparelho: ag.aparelho?.id ? { id: ag.aparelho.id } : null
+      }
+      await updateServico(payload)
+      ag.tecnico = tecnicos.find(t => t.id === tid) || { id: tid }
+      forceRender(n => n + 1)
+    } catch (err) {
+      console.log('erro ao trocar tecnico', err)
+    }
+  }
+
+  const hoje = new Date().toISOString().split('T')[0]
+  const servicosHoje = servicos.filter(ag => ag.data === hoje)
+  const pendentesHoje = servicosHoje.filter(ag => ag.status === 'PENDENTE' || ag.status === 'CONFIRMADO').length
+  const andamentoHoje = servicosHoje.filter(ag => ag.status === 'EM_ANDAMENTO').length
+
   return (
     <div>
+      <div className="kanban-summary">
+        Hoje: <strong>{pendentesHoje} pendentes</strong>, <strong>{andamentoHoje} em andamento</strong>
+        {servicosHoje.length === 0 && ' — nenhum servico hoje'}
+      </div>
       <div className="kanban-board">
       {Object.entries(colunas).map(([status, cards]) => (
         <div
@@ -142,9 +172,28 @@ function ServicosKanban({ servicos, clientes, tecnicos, aparelhos, onUpdate }) {
                 onDragStart={(e) => handleDragStart(e, ag)}
                 onDragEnd={handleDragEnd}
               >
-                <p><strong>{nomeCliente(ag.cliente)}</strong></p>
+                <p><strong>{nomeCliente(ag.cliente).nome}</strong></p>
+                {nomeCliente(ag.cliente).telefone && (
+                  <p style={{ fontSize: 11, color: '#888' }}>{nomeCliente(ag.cliente).telefone}</p>
+                )}
                 <p>{nomeEquip(ag.aparelho)}</p>
-                <p>{nomeTecnico(ag.tecnico)}</p>
+                {isAdmin ? (
+                  <div style={{ marginTop: 4 }}>
+                    <select
+                      value={ag.tecnico?.id || ''}
+                      onChange={(e) => { e.stopPropagation(); trocarTecnico(ag, e.target.value) }}
+                      style={{ fontSize: 11, padding: '2px 4px', width: '100%' }}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <option value="">Nenhum</option>
+                      {tecnicos.map(t => (
+                        <option key={t.id} value={t.id}>{t.nome}</option>
+                      ))}
+                    </select>
+                  </div>
+                ) : (
+                  <p>{nomeTecnico(ag.tecnico)}</p>
+                )}
                 <p style={{ color: '#999', fontSize: 11 }}>
                   {ag.data ? ag.data.split('-').reverse().join('/') : ''}
                   {ag.hora ? ' ' + ag.hora.substring(0, 5) : ''}
